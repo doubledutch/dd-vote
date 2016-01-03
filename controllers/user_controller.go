@@ -47,3 +47,10 @@ func (uc UserController) LoginWithClientID(c *gin.Context) {
 
 	c.JSON(200, models.ApiResponse{IsError: false, Value: user})
 }
+
+func (uc UserController) Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set("uid", nil)
+	session.Save()
+	c.JSON(200, models.ApiResponse{IsError: false, Message: "User logged out"})
+}

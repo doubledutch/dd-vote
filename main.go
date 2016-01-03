@@ -72,6 +72,7 @@ func main() {
 		uc := controllers.NewUserController(db)
 
 		v1.POST("/login", uc.LoginWithClientID)
+		v1.POST("/logout", uc.Logout)
 		v1.GET("/post", pc.GetAllPostsForGroup)
 		v1.POST("/post", pc.CreatePost)
 		v1.POST("/group", gc.GetOrCreateGroup)
