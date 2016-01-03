@@ -5,4 +5,6 @@ type Comment struct {
 	PostID  uint   `json:"-" sql:"index"`
 	UserID  uint   `json:"-" sql:"index"`
 	Comment string `json:"comment" binding:"required"`
+
+	User User
 }

@@ -8,4 +8,6 @@ type Post struct {
 	CreatedBy uint   `json:"-"`
 	Upvotes   uint   `json:"upvotes"`
 	Downvotes uint   `json:"downvotes"`
+
+	Comments []Comment
 }

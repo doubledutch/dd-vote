@@ -34,7 +34,7 @@ func (ac AdminController) Login(c *gin.Context) {
 
 	// lookup user
 	if err := ac.db.First(&user, models.User{Email: user.Email, Password: user.Password}).Error; err != nil {
-		c.JSON(200, models.ApiResponse{IsError: true, Message: "Error logging in"})
+		c.JSON(200, models.ApiResponse{IsError: true, Message: "Email or password is incorrect"})
 		return
 	}
 
