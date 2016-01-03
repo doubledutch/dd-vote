@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/jinzhu/gorm"
@@ -21,32 +20,36 @@ func NewPostController(db gorm.DB) *PostController {
 	return &PostController{db: db}
 }
 
-// GetPost retrieves an individual user resource
-func (pc PostController) GetPost(c *gin.Context) {
-	// Stub an example user
-	u := models.Post{
-		Name: "Why do we ask questions 2?",
+func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
+	groupname := c.Query("group")
+	var group models.Group
+	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
+		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Group does not exist"})
+		return
 	}
 
-	// Write content-type, statuscode, payload
-	c.JSON(http.StatusOK, u)
+	var posts []models.Post
+	pc.db.First(&group, models.Group{Name: group.Name})
+	pc.db.Model(&group).Association("Posts").Find(&posts)
+	c.JSON(http.StatusOK, posts)
 }
 
 // CreatePost creates a new user resource
 func (pc PostController) CreatePost(c *gin.Context) {
-	//TODO lookup group id by name
-	groupname := c.Query("groupname")
+	// lookup group by name
+	groupname := c.Query("group")
 	var group models.Group
-	pc.db.Where("name = ?", groupname).First(&group)
+	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
+		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Group does not exist"})
+		return
+	}
 
-	log.Println(group.ID)
-
+	// deserialize post
 	var post models.Post
 	c.Bind(&post)
 	post.GroupID = group.ID
 
-	//TODO lookup group id by name
-
+	// create new question
 	if err := pc.db.Create(&post).Error; err != nil {
 		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Question has already been asked"})
 		return
