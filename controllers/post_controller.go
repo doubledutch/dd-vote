@@ -4,13 +4,13 @@ import (
 	"net/http"
 
 	"github.com/jinzhu/gorm"
+	"github.com/satori/go.uuid"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jordanjoz/dd-vote/models"
 )
 
 type (
-	// PostController represents the controller for operating on the User resource
 	PostController struct {
 		db gorm.DB
 	}
@@ -48,6 +48,7 @@ func (pc PostController) CreatePost(c *gin.Context) {
 	var post models.Post
 	c.Bind(&post)
 	post.GroupID = group.ID
+	post.UUID = uuid.NewV4().String() //TODO make sure this doesn't break everything
 
 	// create new question
 	if err := pc.db.Create(&post).Error; err != nil {
