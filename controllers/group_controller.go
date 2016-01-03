@@ -21,5 +21,5 @@ func (gc GroupController) GetOrCreateGroup(c *gin.Context) {
 	var group models.Group
 	c.Bind(&group)
 	gc.db.FirstOrCreate(&group, models.Group{Name: group.Name})
-	c.JSON(201, group)
+	c.JSON(201, models.ApiResponse{IsError: false, Value: group})
 }

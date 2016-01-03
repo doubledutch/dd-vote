@@ -24,14 +24,14 @@ func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
 	groupname := c.Query("group")
 	var group models.Group
 	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
-		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Group does not exist"})
+		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 
 	var posts []models.Post
 	pc.db.First(&group, models.Group{Name: group.Name})
 	pc.db.Model(&group).Association("Posts").Find(&posts)
-	c.JSON(http.StatusOK, posts)
+	c.JSON(http.StatusOK, models.ApiResponse{IsError: false, Value: posts})
 }
 
 // CreatePost creates a new user resource
@@ -40,7 +40,7 @@ func (pc PostController) CreatePost(c *gin.Context) {
 	groupname := c.Query("group")
 	var group models.Group
 	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
-		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Group does not exist"})
+		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 
@@ -52,9 +52,9 @@ func (pc PostController) CreatePost(c *gin.Context) {
 
 	// create new question
 	if err := pc.db.Create(&post).Error; err != nil {
-		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Question has already been asked"})
+		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Question has already been asked"})
 		return
 	}
 
-	c.JSON(201, post)
+	c.JSON(201, models.ApiResponse{IsError: false, Value: post})
 }

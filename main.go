@@ -38,28 +38,30 @@ func main() {
 
 	authorized := router.Group("/")
 
-	authorized.Use(AuthRequired())
-	{
-		authorized.GET("/incr", func(c *gin.Context) {
-			session := sessions.Default(c)
-			var count int
-			v := session.Get("count")
-			if v == nil {
-				count = 0
-			} else {
-				count = v.(int)
-				count++
-			}
-			session.Set("count", count)
-			session.Save()
-			c.JSON(200, gin.H{"count": count})
-		})
-	}
+	authorized.Use(UseAuth)
+
+	authorized.GET("/incr", func(c *gin.Context) {
+		session := sessions.Default(c)
+		var count int
+		v := session.Get("count")
+		if v == nil {
+			count = 0
+		} else {
+			count = v.(int)
+			count++
+		}
+		session.Set("count", count)
+		session.Save()
+		c.JSON(200, gin.H{"count": count})
+	})
 
 	// Simple group: v1
 	v1 := router.Group("api/v1")
 	{
 		v1.GET("/ping", func(c *gin.Context) {
+			session := sessions.Default(c)
+			session.Set("uid", 123)
+			session.Save()
 			c.String(200, "pong")
 		})
 
@@ -67,7 +69,9 @@ func main() {
 		pc := controllers.NewPostController(db)
 		gc := controllers.NewGroupController(db)
 		cc := controllers.NewCommentController(db)
+		uc := controllers.NewUserController(db)
 
+		v1.POST("/login", uc.LoginWithClientID)
 		v1.GET("/post", pc.GetAllPostsForGroup)
 		v1.POST("/post", pc.CreatePost)
 		v1.POST("/group", gc.GetOrCreateGroup)
@@ -77,13 +81,11 @@ func main() {
 	router.Run(":8080")
 }
 
-func AuthRequired() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		session := sessions.Default(c)
-		v := session.Get("uid")
-		if v == nil {
-			c.String(200, "user is not logged in")
-			return
-		}
+func UseAuth(c *gin.Context) {
+	session := sessions.Default(c)
+	v := session.Get("uid")
+	if v == nil {
+		c.String(401, "User is not logged in")
+		c.Abort()
 	}
 }

@@ -2,6 +2,13 @@ package models
 
 type User struct {
 	BaseModel
-	Name     string `json:"name"`
-	ClientID uint   `json:"-" sql:"unique_index"`
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
+	ClientID  uint   `json:"-" sql:"unique_index" `
+}
+
+type UserRequest struct {
+	Firstname string `json:"firstname" binding:"required"`
+	Lastname  string `json:"lastname" binding:"required"`
+	ClientID  uint   `json:"client_id" binding:"required"`
 }

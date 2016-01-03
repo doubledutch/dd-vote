@@ -24,7 +24,7 @@ func (cc CommentController) CreateComment(c *gin.Context) {
 	postUUID := c.Query("post")
 	var post models.Post
 	if err := cc.db.Where("uuid = ?", postUUID).First(&post).Error; err != nil {
-		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Question does not exist"})
+		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Question does not exist"})
 		return
 	}
 
@@ -35,9 +35,9 @@ func (cc CommentController) CreateComment(c *gin.Context) {
 
 	// create new comment
 	if err := cc.db.Create(&comment).Error; err != nil {
-		c.JSON(http.StatusOK, models.Error{IsError: true, Message: "Unknown error"})
+		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Unknown error"})
 		return
 	}
 
-	c.JSON(201, comment)
+	c.JSON(201, models.ApiResponse{IsError: false, Value: comment})
 }
