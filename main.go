@@ -18,8 +18,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Unable to open database:", err.Error())
 	}
-	err = db.DB().Ping()
-	if err != nil {
+	if err := db.DB().Ping(); err != nil {
 		log.Fatal("Unable to ping database:", err.Error())
 	}
 
@@ -34,6 +33,7 @@ func main() {
 	gc := controllers.NewGroupController(db)
 	cc := controllers.NewCommentController(db)
 	uc := controllers.NewUserController(db)
+	ac := controllers.NewAdminController(db)
 
 	// init router
 	router := gin.Default()
@@ -46,13 +46,14 @@ func main() {
 	v1 := router.Group("api/v1")
 	{
 		v1.POST("/login", uc.LoginWithClientID)
-		v1.POST("/logout", uc.Logout)
+		v1.POST("/admin/login", ac.Login)
 	}
 
 	// api v1 calls WITH auth
 	v1auth := router.Group("api/v1")
 	{
 		v1auth.Use(UseAuth)
+		v1auth.POST("/logout", uc.Logout)
 		v1auth.GET("/post", pc.GetAllPostsForGroup)
 		v1auth.POST("/post", pc.CreatePost)
 		v1auth.POST("/group", gc.GetOrCreateGroup)
@@ -64,9 +65,12 @@ func main() {
 
 func UseAuth(c *gin.Context) {
 	session := sessions.Default(c)
-	v := session.Get("uid")
+	// verify that user id is set
+	v := session.Get("uid") // TODO - use UUID?
 	if v == nil {
 		c.JSON(401, models.ApiResponse{IsError: false, Message: "User is not logged in"})
 		c.Abort()
 	}
+
+	//TODO -verify that user id exists?
 }
