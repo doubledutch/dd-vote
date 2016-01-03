@@ -32,7 +32,7 @@ func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
 	// get all posts for a group with comments and users for those comments
 	var posts []models.Post
 	pc.db.First(&group, models.Group{Name: group.Name})
-	pc.db.Model(&group).Preload("Comments").Association("Posts").Find(&posts)
+	pc.db.Model(&group).Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
 	c.JSON(http.StatusOK, models.ApiResponse{IsError: false, Value: posts})
 }
 

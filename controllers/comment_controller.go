@@ -41,5 +41,8 @@ func (cc CommentController) CreateComment(c *gin.Context) {
 		return
 	}
 
+	// get comment that we just inserted with user info
+	cc.db.Preload("User").Find(&comment)
+
 	c.JSON(201, models.ApiResponse{IsError: false, Value: comment})
 }
