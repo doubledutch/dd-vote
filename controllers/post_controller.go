@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jordanjoz/dd-vote/models"
 )
@@ -50,6 +51,7 @@ func (pc PostController) CreatePost(c *gin.Context) {
 	c.Bind(&post)
 	post.GroupID = group.ID
 	post.UUID = uuid.NewV4().String() //TODO make sure this doesn't break everything
+	post.CreatedBy = sessions.Default(c).Get("uid").(uint)
 
 	// create new question
 	if err := pc.db.Create(&post).Error; err != nil {

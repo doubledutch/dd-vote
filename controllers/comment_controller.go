@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jordanjoz/dd-vote/models"
 )
@@ -32,6 +33,7 @@ func (cc CommentController) CreateComment(c *gin.Context) {
 	var comment models.Comment
 	c.Bind(&comment)
 	comment.PostID = post.ID
+	comment.UserID = sessions.Default(c).Get("uid").(uint)
 
 	// create new comment
 	if err := cc.db.Create(&comment).Error; err != nil {

@@ -4,9 +4,11 @@ type User struct {
 	BaseModel
 	Firstname string `json:"firstname"`
 	Lastname  string `json:"lastname"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	ClientID  uint   `json:"-" sql:"unique_index" `
+
+	// hidden fields
+	Email    string `json:"-"`
+	Password string `json:"-"`
+	ClientID uint   `json:"-" sql:"unique_index" `
 }
 
 type UserRequest struct {
