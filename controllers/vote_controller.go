@@ -21,6 +21,17 @@ func NewVoteController(db gorm.DB) *VoteController {
 	return &VoteController{db: db}
 }
 
+func (cc VoteController) GetUserVotes(c *gin.Context) {
+	userID := sessions.Default(c).Get("uid").(uint)
+	var votes []models.Vote
+	if err := cc.db.Where("user_id = ?", userID).Find(&votes).Error; err != nil {
+		// make empty slice
+		votes = make([]models.Vote, 0)
+	}
+
+	c.JSON(200, models.ApiResponse{IsError: false, Value: votes})
+}
+
 func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	var voteReq models.VoteCreateRequest
 	if err := c.BindJSON(&voteReq); err != nil {
@@ -48,6 +59,7 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	if err := tx.Where("user_id = ? AND post_id = ?", userID, post.ID).First(&vote).Error; err != nil {
 		// vote does not exist
 		vote.PostID = post.ID
+		vote.PostUUID = post.UUID
 		vote.UserID = userID
 		vote.Value = voteReq.Value
 		if err := tx.Create(&vote).Error; err != nil {
