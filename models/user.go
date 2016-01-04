@@ -12,9 +12,9 @@ type User struct {
 }
 
 type UserRequest struct {
-	Firstname string `json:"firstname" binding:"required"`
-	Lastname  string `json:"lastname" binding:"required"`
-	ClientID  uint   `json:"client_id" binding:"required"`
+	Firstname string `json:"firstName" binding:"required"`
+	Lastname  string `json:"lastName" binding:"required"`
+	ClientID  uint   `json:"userId" binding:"required"`
 }
 
 type AdminLoginRequest struct {

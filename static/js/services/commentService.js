@@ -9,8 +9,8 @@ angular.module('commentService', [])
                 return $http({
                     method: 'POST',
                     url: '../../api/v1/comment',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    data: $.param(commentData)
+                    headers: {'Content-Type': 'application/json'},
+                    data: commentData
                 });
             }
         }

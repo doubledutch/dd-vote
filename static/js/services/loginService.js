@@ -8,9 +8,9 @@ angular.module('loginService', [])
             save: function (userData) {
                 return $http({
                     method: 'POST',
-                    url: '../../prideLogin',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    data: $.param(userData)
+                    url: '../../api/v1/login',
+                    headers: {'Content-Type': 'application/json'},
+                    data: userData
                 });
             }
         }

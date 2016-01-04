@@ -23,8 +23,8 @@ angular.module('snackService', [])
                 return $http({
                     method: 'POST',
                     url: '../../api/v1/post',
-                    headers: { 'Content-Type' : 'application/x-www-form-urlencoded' },
-                    data: $.param(snackData)
+                    headers: { 'Content-Type' : 'application/json' },
+                    data: snackData
                 });
             }
         }

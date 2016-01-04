@@ -9,8 +9,8 @@ angular.module('voteService', [])
                 return $http({
                     method: 'POST',
                     url: '../../api/v1/vote',
-                    headers: { 'Content-Type' : 'application/x-www-form-urlencoded' },
-                    data: $.param(voteData)
+                    headers: { 'Content-Type' : 'application/json' },
+                    data: voteData
                 });
             }
         }

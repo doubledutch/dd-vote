@@ -8,8 +8,8 @@ angular.module('adminService', [])
                 return $http({
                     method: 'POST',
                     url: '../../admin/login',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    data: $.param(userData)
+                    headers: {'Content-Type': 'application/json'},
+                    data: userData
                 });
             }
         }
