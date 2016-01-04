@@ -65,7 +65,7 @@ angular.module('mainCtrl', ['ngRoute'])
                     }
                     else if (!angular.equals($scope.snacks, data.value)) {
                         $('#new-data-toast').stop().fadeIn(400);
-                        $scope.queuedData = data.snacks;
+                        $scope.queuedData = data.value;
                     }
                 });
         };
@@ -193,7 +193,7 @@ angular.module('mainCtrl', ['ngRoute'])
                 }
             }
 
-            Vote.save({id: snackId, value: value})
+            Vote.save({post_id: snackId, value: value})
                 .success(function(data) {
                     // do nothing
                 })
