@@ -34,6 +34,7 @@ func main() {
 	cc := controllers.NewCommentController(db)
 	uc := controllers.NewUserController(db)
 	ac := controllers.NewAdminController(db)
+	vc := controllers.NewVoteController(db)
 
 	// init router
 	router := gin.Default()
@@ -58,6 +59,7 @@ func main() {
 		v1auth.POST("/post", pc.CreatePost)
 		v1auth.POST("/group", gc.GetOrCreateGroup)
 		v1auth.POST("/comment", cc.CreateComment)
+		v1auth.POST("/vote", vc.CreateOrUpdateVote)
 	}
 
 	router.Run(":8080")
