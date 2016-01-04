@@ -14,6 +14,7 @@ import (
 
 func main() {
 
+	// connect to db
 	db, err := gorm.Open("postgres", "password=mysecretpassword host=localhost port=5432 sslmode=disable")
 	if err != nil {
 		log.Fatal("Unable to open database:", err.Error())
@@ -21,7 +22,6 @@ func main() {
 	if err := db.DB().Ping(); err != nil {
 		log.Fatal("Unable to ping database:", err.Error())
 	}
-
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
 
@@ -43,23 +43,24 @@ func main() {
 	store := sessions.NewCookieStore([]byte("secret")) //TODO use environment variable secret
 	router.Use(sessions.Sessions("ddvote_session", store))
 
-	// api v1 calls WITHOUT auth
+	// v1 api calls
 	v1 := router.Group("api/v1")
 	{
+		// endpoints WITHOUT auth
 		v1.POST("/login", uc.LoginWithClientID)
 		v1.POST("/admin/login", ac.Login)
-	}
 
-	// api v1 calls WITH auth
-	v1auth := router.Group("api/v1")
-	{
-		v1auth.Use(UseAuth)
-		v1auth.POST("/logout", uc.Logout)
-		v1auth.GET("/post", pc.GetAllPostsForGroup)
-		v1auth.POST("/post", pc.CreatePost)
-		v1auth.POST("/group", gc.GetOrCreateGroup)
-		v1auth.POST("/comment", cc.CreateComment)
-		v1auth.POST("/vote", vc.CreateOrUpdateVote)
+		// api v1 calls WITH auth
+		v1auth := v1.Group("")
+		{
+			v1auth.Use(UseAuth)
+			v1auth.POST("/logout", uc.Logout)
+			v1auth.GET("/post", pc.GetAllPostsForGroup)
+			v1auth.POST("/post", pc.CreatePost)
+			v1auth.POST("/group", gc.GetOrCreateGroup)
+			v1auth.POST("/comment", cc.CreateComment)
+			v1auth.POST("/vote", vc.CreateOrUpdateVote)
+		}
 	}
 
 	router.Run(":8080")
