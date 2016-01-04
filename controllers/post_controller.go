@@ -33,6 +33,14 @@ func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
 	var posts []models.Post
 	pc.db.First(&group, models.Group{Name: group.Name})
 	pc.db.Model(&group).Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
+
+	// make sure comments are empty slice and not nil
+	for i, _ := range posts {
+		if posts[i].Comments == nil {
+			posts[i].Comments = make([]models.Comment, 0)
+		}
+	}
+
 	c.JSON(http.StatusOK, models.ApiResponse{IsError: false, Value: posts})
 }
 
@@ -58,6 +66,9 @@ func (pc PostController) CreatePost(c *gin.Context) {
 		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Question has already been asked"})
 		return
 	}
+
+	// make sure comments are empty slice and not nil
+	post.Comments = make([]models.Comment, 0)
 
 	c.JSON(201, models.ApiResponse{IsError: false, Value: post})
 }

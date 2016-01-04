@@ -99,16 +99,16 @@
         <!-- THE QUESTIONS =============================================== -->
         <div class="snack-list-item" data-ng-show="!loading"
              data-ng-repeat="snack in snacks | filter:snackData.name | orderBy: predicate:reverse"
-             data-ng-controller="voteController" id="snack-{{ snack.id }}">
+             data-ng-controller="voteController" id="snack-{{ snack.uuid }}">
             <div >
                 <!-- UPVOTES -->
                 <div class="arrow-container">
                     <div data-ng-class="snack.vote_value == -1 ? 'arrow-down selected' : 'arrow-down'"
-                         data-ng-click="vote(snack.id, -1)"></div>
+                         data-ng-click="vote(snack.uuid, -1)"></div>
                     <div class="arrow-value">-{{ snack.downvotes }}</div>
                 </div>
                 <!-- QUESTION TITLE -->
-                <div class="snack-list-item-text-container ios-toggle" data-toggle="collapse" data-target="#comments-{{ snack.id }}" >
+                <div class="snack-list-item-text-container ios-toggle" data-toggle="collapse" data-target="#comments-{{ snack.uuid }}" >
                     <div data-ng-class="snack-list-item-text" >{{ snack.name }} ({{ snack.sum_votes }}) <span class="fa fa-television" data-ng-show="!isJSSDKInitialized" data-ng-click="present(snack)"></span>
                     </div>
                     <div class="snack-list-item-subtitle" >{{ snack.comments ? snack.comments.length : 0 }} comment{{ ((snack.comments.length) == 1) ? '' : 's'}}
@@ -117,16 +117,16 @@
                 <!-- DOWNVOTES -->
                 <div class="arrow-container">
                     <div data-ng-class="snack.vote_value == 1 ? 'arrow-up selected' : 'arrow-up'"
-                         data-ng-click="vote(snack.id, 1)"></div>
+                         data-ng-click="vote(snack.uuid, 1)"></div>
                     <div class="arrow-value">+{{ snack.upvotes }}</div>
                 </div>
             </div>
             <!-- COMMENTS ON QUESTIONS-->
-            <div class="collapse" id="comments-{{ snack.id }}" >
+            <div class="collapse" id="comments-{{ snack.uuid }}" >
                 <div class="comments text-left ios-toggle" data-ng-repeat="comment in snack.comments" data-target="#comments-{{ snack.id }}" >
-                    <div><div class="username">{{ comment.user.name }}</div> <span ng-bind-html="comment.comment | linky:'_blank'"></span> <div class="timestamp">{{ timeSince(comment.created_at) }}</div></div>
+                    <div><div class="username">{{ comment.user.firstname }} {{ comment.user.lastname }}</div> <span ng-bind-html="comment.comment | linky:'_blank'"></span> <div class="timestamp">{{ timeSince(comment.created_at) }}</div></div>
                 </div>
-                <form data-ng-submit="submitComment(snack.id)" data-ng-controller="commentController" class="comment-form" data-ng-show="isJSSDKInitialized">
+                <form data-ng-submit="submitComment(snack.uuid)" data-ng-controller="commentController" class="comment-form" data-ng-show="isJSSDKInitialized">
                     <div class="input-group comment-input-group">
                         <input type="text" class="form-control input-sm comment-input" placeholder="Write a comment" maxlength="500" ng-model="commentText"/>
                         <span class="input-group-btn">

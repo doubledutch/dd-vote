@@ -117,25 +117,23 @@ angular.module('mainCtrl', ['ngRoute'])
                 return;
             }
 
-            // set group id
-            $scope.snackData.group_name = groupId;
-            var origValue = $scope.snackData.name;
-
             // save the snack. pass in snack data from the form
             // use the function we created in our service
-            Snack.save($scope.snackData)
+            Snack.save($scope.snackData, groupId)
                 .success(function(data) {
                     if (!data.error) {
                         // add snack to list
-                        snack = data.snack;
+                        snack = data.value;
                         snack.sum_votes = snack.upvotes - snack.downvotes;
                         snack.vote_value = 0;
                         snack.comments = [];
                         $scope.snacks.push(snack);
+
+                        // clear input
+                        $scope.snackData.name = null;
                     } else {
                         $('#error-message').html('Unable to submit question, please try again...</br>' + JSON.stringify(data.message));
                         $('#error-message').show().delay(3000).fadeOut('slow');
-                        $scope.snackData.name = origValue;
                     }
 
                     // scroll snack into view
@@ -147,8 +145,6 @@ angular.module('mainCtrl', ['ngRoute'])
                 });
 
 
-            // clear input
-            $scope.snackData.name = null;
         }
 
         $scope.present = function(snack) {
@@ -220,13 +216,13 @@ angular.module('mainCtrl', ['ngRoute'])
 
             // save the snack. pass in snack data from the form
             // use the function we created in our service
-            Comment.save({id: snackId, comment: $scope.commentText})
+            Comment.save(snackId, {comment: $scope.commentText})
                 .success(function (data) {
                     if (!data.error) {
                         // add to snack's comments
                         for (index = 0; index < $scope.snacks.length; index++) {
-                            if ($scope.snacks[index].id == data.comment.snack_id) {
-                                $scope.snacks[index].comments.push(data.comment);
+                            if ($scope.snacks[index].uuid == snackId) {
+                                $scope.snacks[index].comments.push(data.value);
                                 break;
                             }
                         }

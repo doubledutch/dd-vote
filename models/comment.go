@@ -9,5 +9,5 @@ type Comment struct {
 	UserID uint `json:"-" sql:"index"`
 
 	// associations
-	User User
+	User User `json:"user"`
 }

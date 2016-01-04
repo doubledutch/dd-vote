@@ -19,12 +19,13 @@ angular.module('snackService', [])
             },
 
             // save a snack (pass in snack data)
-            save : function(snackData) {
+            save : function(snackData, group_name) {
                 return $http({
                     method: 'POST',
                     url: '../../api/v1/post',
                     headers: { 'Content-Type' : 'application/json' },
-                    data: snackData
+                    data: snackData,
+                    params: {group: group_name}
                 });
             }
         }

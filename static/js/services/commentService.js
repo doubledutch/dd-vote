@@ -5,12 +5,13 @@ angular.module('commentService', [])
 
         return {
             // save a comment
-            save: function (commentData) {
+            save: function (snackId, commentData) {
                 return $http({
                     method: 'POST',
                     url: '../../api/v1/comment',
                     headers: {'Content-Type': 'application/json'},
-                    data: commentData
+                    data: commentData,
+                    params: {post: snackId}
                 });
             }
         }

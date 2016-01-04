@@ -12,5 +12,5 @@ type Post struct {
 	CreatedBy uint `json:"-"`
 
 	// associations
-	Comments []Comment
+	Comments []Comment `json:"comments"`
 }
