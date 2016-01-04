@@ -1,0 +1,255 @@
+/*==================================================
+=     Styles that vary with screen size            =
+==================================================*/
+
+/* Custom, iPhone Retina through phones */
+@media only screen and (min-width : 320px) {
+    .comments {
+        width: 88%;
+        margin: auto;
+    }
+
+    .comment-input-group {
+        width: 90%;
+        margin: auto;
+    }
+}
+
+/* Small Devices, Tablets and Desktops */
+@media only screen and (min-width : 768px) {
+    .comments {
+        width: 58%;
+        margin: auto;
+    }
+
+    .comment-input-group {
+        width: 60%;
+        margin: auto;
+    }
+}
+
+/*==================================================
+=    All other styles                              =
+==================================================*/
+
+
+body 		{ padding-top:30px; }
+form 		{ padding-bottom:20px; }
+
+body {
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    color: #999;
+    margin-bottom: 80px;
+}
+
+.welcome {
+    width: 300px;
+    height: 200px;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    margin-left: -150px;
+    margin-top: -100px;
+}
+
+a, a:visited {
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 32px;
+    margin: 16px 0 16px 0;
+}
+
+.add-new-form input, .add-new-form textarea {
+    padding: 1px 1px 1px 8px;
+    height: 30px;
+    border: 1px solid #aaa;
+    box-shadow: 0 0 3px #ccc, 0 10px 15px #eee inset;
+    border-radius: 2px;
+}
+
+.add-new-form input:focus, .add-new-form textarea:focus {
+    background: #fff;
+    border: 1px solid #555;
+    box-shadow: 0 0 3px #aaa;
+}
+
+#list-snacks {
+    margin-top: 16px;
+}
+
+#groups-form-control {
+    margin-bottom: 16px;
+}
+
+.snack-list-item {
+    padding: 8px;
+    padding-bottom: 12px;
+    padding-top: 12px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid #aaa;;
+}
+
+.snack-list-item:active {
+    background-color: rgba(192,192,192,0.1);
+}
+
+.snack-list-item-subtitle {
+    color: #4288CE;
+    font-size: smaller;
+}
+
+.arrow-up {
+    height: 0;
+    width: 20px;
+    margin: auto;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid;
+    border-bottom-color: lightgray;
+}
+
+.arrow-up.selected {
+    border-bottom-color: green;
+}
+
+.arrow-up:active {
+    border-bottom-color: lightgreen;
+}
+
+.arrow-down {
+    height: 0;
+    width: 20px;
+    margin: auto;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid;
+    border-top-color: lightgray;
+}
+
+.arrow-down.selected {
+    border-top-color: red;
+}
+
+.arrow-down:active {
+    border-top-color: lightpink;
+}
+
+.snack-list-item_text {
+    display: inline-block;
+    zoom: 1;
+}
+
+.arrow-container {
+    display: inline-block;
+    position: relative;
+    width: 15%;
+}
+
+.arrow-value {
+}
+
+.username {
+    display: inline-block;
+    color: #555555;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.timestamp {
+    display: inline-block;
+    font-size: smaller;
+    color: #C6C6C6;
+}
+
+.comment-form {
+    margin-top: 10px;
+    padding-bottom: 0px;
+}
+
+.footer {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.snack-list-item-text-container {
+    position: relative;
+    width: 60%;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 8px;
+    word-wrap: break-word;
+}
+
+.tab-button {
+    text-align: center;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.ios-toggle {
+    cursor: pointer;
+}
+
+#error-message {
+    display: none;
+}
+
+.exit-button {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    cursor: pointer;
+}
+
+.present-text-container {
+    position: relative 
+}
+
+.present-text {
+    font-size: 40px;
+    margin: 0;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    width: 80%;
+    display: inline-block;
+    word-wrap: break-word;
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+#new-data-toast {
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    height:20px;
+    height:auto;
+    position:fixed;
+    left:50%;
+    margin-left:-100px;
+    bottom:10px;
+    background-color: #383838;
+    color: #F0F0F0;
+    font-size: 20px;
+    padding:10px;
+    text-align:center;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+    -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+    box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+}
+}

@@ -1,0 +1,9 @@
+#error-message {
+    display: none;
+}
+
+#logout {
+    position: fixed;
+    right: 30px;
+    top: 15px;
+}

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Q&amp;A</title>
+
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <style>
+        @import url(//fonts.googleapis.com/css?family=Lato:700);
+    </style>
+
+    <!-- JS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-sanitize.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+
+    <!-- DD SDK -->
+    <script src="../../js/libs/DDEventsSDK.js"></script>
+
+    <!-- ANGULAR -->
+    <script src="../../js/controllers/mainCtrl.js"></script>
+    <script src="../../js/services/snackService.js"></script>
+    <script src="../../js/services/voteService.js"></script>
+    <script src="../../js/services/groupService.js"></script>
+    <script src="../../js/services/loginService.js"></script>
+    <script src="../../js/services/commentService.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/libs/bootstrap-maxlength.min.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-50624244-3', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+</head>
+<body class="container" data-ng-app="snackApp" data-ng-controller="mainController">
+<div data-ng-show="isPresenting">
+    <span class="exit-button fa fa-2x fa-times-circle-o" data-ng-click="isPresenting = false;"></span>
+    <div class="present-text-container">
+        <div class="present-text ">{{ presentedSnack.name }}</div>
+    </div>
+</div>
+<div data-ng-controller="groupController" data-ng-hide="isPresenting">
+    <div class="col-md-8 col-md-offset-2">
+
+        <div id="error-message" class="alert alert-danger" role="alert"></div>
+        <div class="alert alert-warning" role="alert" data-ng-show="!isJSSDKInitialized">You can only edit this page inside a DoubleDutch app</div>
+
+        <!-- LOADING ICON =============================================== -->
+        <p class="text-center" data-ng-show="loading && isJSSDKInitialized"><span class="fa fa-refresh fa-5x fa-spin"></span></p>
+
+        <!-- NEW QUESTION FORM =============================================== -->
+        <form data-ng-submit="submitSnack()" data-ng-show="!loading && isJSSDKInitialized">
+            <div>
+                <!-- SEACRCH / NEW QUESTION FIELD =============================================== -->
+                <div class="entry input-group">
+                    <input type="text" class="form-control input-lg" name="snack" data-ng-model="snackData.name"
+                           placeholder="Ask a question" maxlength="140" id="snack-input"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-success btn-add btn-lg" type="submit">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </form>
+
+        <!-- SORTING TAB OPTIONS =============================================== -->
+        <div class="btn-group btn-group-sm btn-group-justified" data-toggle="buttons" data-ng-hide="loading">
+            <label class="btn btn-default active tab-button" data-ng-click="predicate = 'sum_votes'; reverse=true">
+                <input type="radio" name="options" id="option1" checked>Popular
+            </label>
+            <label class="btn btn-default tab-button" data-ng-click="predicate = 'created_at'; reverse=true">
+                <input type="radio" name="options" id="option2" checked>New
+            </label>
+            <label class="btn btn-default tab-button" data-ng-click="predicate = controversySort; reverse=true">
+                <input type="radio" name="options" id="option3">Debated
+            </label>
+        </div>
+
+        <!-- empty state if no questions -->
+        <div ng-show="!loading && snacks.length == 0">Be the first to ask a question!</div>
+
+        <!-- THE QUESTIONS =============================================== -->
+        <div class="snack-list-item" data-ng-show="!loading"
+             data-ng-repeat="snack in snacks | filter:snackData.name | orderBy: predicate:reverse"
+             data-ng-controller="voteController" id="snack-{{ snack.id }}">
+            <div >
+                <!-- UPVOTES -->
+                <div class="arrow-container">
+                    <div data-ng-class="snack.vote_value == -1 ? 'arrow-down selected' : 'arrow-down'"
+                         data-ng-click="vote(snack.id, -1)"></div>
+                    <div class="arrow-value">-{{ snack.downvotes }}</div>
+                </div>
+                <!-- QUESTION TITLE -->
+                <div class="snack-list-item-text-container ios-toggle" data-toggle="collapse" data-target="#comments-{{ snack.id }}" >
+                    <div data-ng-class="snack-list-item-text" >{{ snack.name }} ({{ snack.sum_votes }}) <span class="fa fa-television" data-ng-show="!isJSSDKInitialized" data-ng-click="present(snack)"></span>
+                    </div>
+                    <div class="snack-list-item-subtitle" >{{ snack.comments.length }} comment{{ ((snack.comments.length) == 1) ? '' : 's'}}
+                    </div>
+                </div>
+                <!-- DOWNVOTES -->
+                <div class="arrow-container">
+                    <div data-ng-class="snack.vote_value == 1 ? 'arrow-up selected' : 'arrow-up'"
+                         data-ng-click="vote(snack.id, 1)"></div>
+                    <div class="arrow-value">+{{ snack.upvotes }}</div>
+                </div>
+            </div>
+            <!-- COMMENTS ON QUESTIONS-->
+            <div class="collapse" id="comments-{{ snack.id }}" >
+                <div class="comments text-left ios-toggle" data-ng-repeat="comment in snack.comments" data-target="#comments-{{ snack.id }}" >
+                    <div><div class="username">{{ comment.user.name }}</div> <span ng-bind-html="comment.comment | linky:'_blank'"></span> <div class="timestamp">{{ timeSince(comment.created_at) }}</div></div>
+                </div>
+                <form data-ng-submit="submitComment(snack.id)" data-ng-controller="commentController" class="comment-form" data-ng-show="isJSSDKInitialized">
+                    <div class="input-group comment-input-group">
+                        <input type="text" class="form-control input-sm comment-input" placeholder="Write a comment" maxlength="500" ng-model="commentText"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary btn-add btn-sm" type="submit">
+                                <span class="glyphicon glyphicon-send"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="new-data-toast" style="display:none" data-ng-click="loadQueuedData()">Tap to load new data</div>
+</body>
+</html>
