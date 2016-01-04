@@ -35,13 +35,25 @@ func main() {
 	uc := controllers.NewUserController(db)
 	ac := controllers.NewAdminController(db)
 	vc := controllers.NewVoteController(db)
+	pvc := controllers.NewPageViewController(db)
 
 	// init router
 	router := gin.Default()
 
+	// serve static files
+	router.Static("/css", "./static/css")
+	router.Static("/js", "./static/js")
+	router.Static("/img", "./static/img")
+
 	// session management
 	store := sessions.NewCookieStore([]byte("secret")) //TODO use environment variable secret
 	router.Use(sessions.Sessions("ddvote_session", store))
+
+	// view routes
+	views := router.Group("")
+	{
+		views.GET("/g/:gid", pvc.ShowGroupPage)
+	}
 
 	// v1 api calls
 	v1 := router.Group("api/v1")
