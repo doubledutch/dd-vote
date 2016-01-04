@@ -61,13 +61,13 @@ func main() {
 		// endpoints WITHOUT auth
 		v1.POST("/login", uc.LoginWithClientID)
 		v1.POST("/admin/login", ac.Login)
+		v1.GET("/post", pc.GetAllPostsForGroup)
 
 		// api v1 calls WITH auth
 		v1auth := v1.Group("")
 		{
 			v1auth.Use(UseAuth)
 			v1auth.POST("/logout", uc.Logout)
-			v1auth.GET("/post", pc.GetAllPostsForGroup)
 			v1auth.POST("/post", pc.CreatePost)
 			v1auth.POST("/group", gc.GetOrCreateGroup)
 			v1auth.POST("/comment", cc.CreateComment)

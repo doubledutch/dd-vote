@@ -111,7 +111,7 @@
                 <div class="snack-list-item-text-container ios-toggle" data-toggle="collapse" data-target="#comments-{{ snack.id }}" >
                     <div data-ng-class="snack-list-item-text" >{{ snack.name }} ({{ snack.sum_votes }}) <span class="fa fa-television" data-ng-show="!isJSSDKInitialized" data-ng-click="present(snack)"></span>
                     </div>
-                    <div class="snack-list-item-subtitle" >{{ snack.comments.length }} comment{{ ((snack.comments.length) == 1) ? '' : 's'}}
+                    <div class="snack-list-item-subtitle" >{{ snack.comments ? snack.comments.length : 0 }} comment{{ ((snack.comments.length) == 1) ? '' : 's'}}
                     </div>
                 </div>
                 <!-- DOWNVOTES -->

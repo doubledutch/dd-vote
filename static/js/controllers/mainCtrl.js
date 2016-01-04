@@ -56,14 +56,14 @@ angular.module('mainCtrl', ['ngRoute'])
             Snack.get(groupId)
                 .success(function(data) {
                     // calculate sum of votes
-                    for (var i in data.snacks) {
-                        data.snacks[i].sum_votes = data.snacks[i].upvotes - data.snacks[i].downvotes;
+                    for (var i in data.value) {
+                        data.value[i].sum_votes = data.value[i].upvotes - data.value[i].downvotes;
                     }
                     if ($scope.loading) {
-                        $scope.snacks = data.snacks;
+                        $scope.snacks = data.value;
                         $scope.loading = false;
                     }
-                    else if (!angular.equals($scope.snacks, data.snacks)) {
+                    else if (!angular.equals($scope.snacks, data.value)) {
                         $('#new-data-toast').stop().fadeIn(400);
                         $scope.queuedData = data.snacks;
                     }
@@ -116,7 +116,7 @@ angular.module('mainCtrl', ['ngRoute'])
                 $('#error-message').show().delay(3000).fadeOut('slow');
                 return;
             }
-        
+
             // set group id
             $scope.snackData.group_name = groupId;
             var origValue = $scope.snackData.name;
