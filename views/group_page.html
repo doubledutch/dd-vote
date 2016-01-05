@@ -103,7 +103,7 @@
             <div >
                 <!-- UPVOTES -->
                 <div class="arrow-container">
-                    <div data-ng-class="snack.vote_value == -1 ? 'arrow-down selected' : 'arrow-down'"
+                    <div data-ng-class="voteData[snack.uuid] == -1 ? 'arrow-down selected' : 'arrow-down'"
                          data-ng-click="vote(snack.uuid, -1)"></div>
                     <div class="arrow-value">-{{ snack.downvotes }}</div>
                 </div>
@@ -116,7 +116,7 @@
                 </div>
                 <!-- DOWNVOTES -->
                 <div class="arrow-container">
-                    <div data-ng-class="snack.vote_value == 1 ? 'arrow-up selected' : 'arrow-up'"
+                    <div data-ng-class="voteData[snack.uuid] == 1 ? 'arrow-up selected' : 'arrow-up'"
                          data-ng-click="vote(snack.uuid, 1)"></div>
                     <div class="arrow-value">+{{ snack.upvotes }}</div>
                 </div>

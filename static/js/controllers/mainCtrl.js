@@ -37,9 +37,11 @@ angular.module('mainCtrl', ['ngRoute'])
 
         // object to hold all the data for the new snack form
         $scope.snackData = {};
+        $scope.voteData = {};
 
         // loading variable to show the spinning loading icon
         $scope.loading = true;
+        $scope.votesLoading = true;
 
         // get group id from path
         var path = $location.path().split("/");
@@ -48,20 +50,6 @@ angular.module('mainCtrl', ['ngRoute'])
 
         // queued data to load
         $scope.queuedData = [];
-
-        var loadUserVotes = function () {
-          Vote.getUserVotes()
-              .success(function(data) {
-                  for (var i in data.value) {
-                      var postUUID = data.value[i].post_uuid;
-                      for (var j in $scope.snacks) {
-                        if ($scope.snacks[j].uuid == postUUID) {
-                          $scope.snacks[j].vote_value = data.value[i].value;
-                        }
-                      }
-                  }
-              });
-        }
 
         var loadData = function() {
             // get all the snacks first and bind it to the $scope.snacks object
@@ -76,13 +64,23 @@ angular.module('mainCtrl', ['ngRoute'])
                     if ($scope.loading) {
                         $scope.snacks = data.value;
                         $scope.loading = false;
-                        loadUserVotes();
                     }
                     else if (!angular.equals($scope.snacks, data.value)) {
                         $('#new-data-toast').stop().fadeIn(400);
                         $scope.queuedData = data.value;
                     }
                 });
+
+            // only load vote data once
+            if ($scope.votesLoading) {
+              Vote.getUserVotes()
+                  .success(function(data) {
+                      $scope.votesLoading = false;
+                      for (var i in data.value) {
+                          $scope.voteData[data.value[i].post_uuid] = data.value[i].value;
+                      }
+                  });
+            }
         };
 
         // assume js sdk is initialized, but show error after .5 seconds if
@@ -140,7 +138,6 @@ angular.module('mainCtrl', ['ngRoute'])
                         // add snack to list
                         snack = data.value;
                         snack.sum_votes = snack.upvotes - snack.downvotes;
-                        snack.vote_value = 0;
                         snack.comments = [];
                         $scope.snacks.push(snack);
 
@@ -188,9 +185,9 @@ angular.module('mainCtrl', ['ngRoute'])
                 if ($scope.snacks[index].uuid == snackId) {
 
                     // remove old vote value
-                    if ($scope.snacks[index].vote_value == -1) {
+                    if ($scope.voteData[snackId] == -1) {
                         $scope.snacks[index].downvotes--;
-                    } else if ($scope.snacks[index].vote_value == 1) {
+                    } else if ($scope.voteData[snackId] == 1) {
                         $scope.snacks[index].upvotes--;
                     }
 
@@ -202,7 +199,7 @@ angular.module('mainCtrl', ['ngRoute'])
                     }
 
                     // set new vote value
-                    $scope.snacks[index].vote_value = value;
+                    $scope.voteData[snackId] = value;
                     $scope.snacks[index].sum_votes = $scope.snacks[index].upvotes - $scope.snacks[index].downvotes;
                     break;
                 }

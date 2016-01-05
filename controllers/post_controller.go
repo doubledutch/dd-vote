@@ -32,7 +32,7 @@ func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
 	// get all posts for a group with comments and users for those comments
 	var posts []models.Post
 	pc.db.First(&group, models.Group{Name: group.Name})
-	pc.db.Model(&group).Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
+	pc.db.Model(&group).Order("id").Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
 
 	// make sure comments are empty slice and not nil
 	for i, _ := range posts {
