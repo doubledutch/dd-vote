@@ -1,4 +1,4 @@
-package models
+package table
 
 type Post struct {
 	BaseModel

@@ -8,7 +8,8 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/jordanjoz/dd-vote/models"
+	"github.com/jordanjoz/dd-vote/api/models/resp"
+	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
 type (
@@ -25,26 +26,26 @@ func (cc CommentController) CreateComment(c *gin.Context) {
 	// lookup post by uuid
 	postUUID := c.Query("post")
 	log.Println(postUUID)
-	var post models.Post
+	var post table.Post
 	if err := cc.db.Where("uuid = ?", postUUID).First(&post).Error; err != nil {
-		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Question does not exist"})
+		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Question does not exist"})
 		return
 	}
 
 	// deserialize comment
-	var comment models.Comment
+	var comment table.Comment
 	c.Bind(&comment)
 	comment.PostID = post.ID
 	comment.UserID = sessions.Default(c).Get("uid").(uint)
 
 	// create new comment
 	if err := cc.db.Create(&comment).Error; err != nil {
-		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Unknown error"})
+		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Unknown error"})
 		return
 	}
 
 	// get comment that we just inserted with user info
 	cc.db.Preload("User").Find(&comment)
 
-	c.JSON(201, models.ApiResponse{IsError: false, Value: comment})
+	c.JSON(201, resp.ApiResponse{IsError: false, Value: comment})
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/jordanjoz/dd-vote/models"
+	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
 // User roles
@@ -15,7 +15,7 @@ const (
 )
 
 func HasAccessToGroup(uid uint, groupUUID string, db gorm.DB) bool {
-	var permissions []models.Permission
+	var permissions []table.Permission
 	db.Where("user_id = ?", uid).Find(&permissions)
 	for _, p := range permissions {
 		if p.Role == SuperAdmin {

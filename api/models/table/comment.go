@@ -1,4 +1,4 @@
-package models
+package table
 
 type Comment struct {
 	BaseModel

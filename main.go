@@ -6,8 +6,10 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/jordanjoz/dd-vote/controllers"
-	"github.com/jordanjoz/dd-vote/models"
+	"github.com/jordanjoz/dd-vote/api/controllers"
+
+	"github.com/jordanjoz/dd-vote/api/models/resp"
+	"github.com/jordanjoz/dd-vote/api/models/table"
 	"github.com/jordanjoz/dd-vote/user"
 	"github.com/jordanjoz/dd-vote/viewcontrollers"
 
@@ -28,7 +30,7 @@ func main() {
 	db.DB().SetMaxOpenConns(100)
 
 	// run migrations
-	db.AutoMigrate(&models.Post{}, &models.Group{}, &models.User{}, &models.Vote{}, &models.Comment{}, &models.Permission{})
+	db.AutoMigrate(&table.Post{}, &table.Group{}, &table.User{}, &table.Vote{}, &table.Comment{}, &table.Permission{})
 
 	// get api controller instances
 	pc := controllers.NewPostController(db)
@@ -87,7 +89,7 @@ func main() {
 
 func UseAuth(c *gin.Context) {
 	if !user.IsLoggedIn(c) {
-		c.JSON(401, models.ApiResponse{IsError: false, Message: "User is not logged in"})
+		c.JSON(401, resp.ApiResponse{IsError: false, Message: "User is not logged in"})
 		c.Abort()
 	}
 }

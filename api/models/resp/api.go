@@ -1,4 +1,4 @@
-package models
+package resp
 
 type ApiResponse struct {
 	IsError bool        `json:"error"`

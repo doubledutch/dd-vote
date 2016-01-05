@@ -7,7 +7,9 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/jordanjoz/dd-vote/models"
+	"github.com/jordanjoz/dd-vote/api/models/req"
+	"github.com/jordanjoz/dd-vote/api/models/resp"
+	"github.com/jordanjoz/dd-vote/api/models/table"
 	userHelper "github.com/jordanjoz/dd-vote/user"
 )
 
@@ -22,25 +24,25 @@ func NewAdminController(db gorm.DB) *AdminController {
 }
 
 func (ac AdminController) Login(c *gin.Context) {
-	var userReq models.AdminLoginRequest
+	var userReq req.AdminLoginRequest
 	if err := c.BindJSON(&userReq); err != nil {
 		log.Printf("Unable to parse user: %s", err)
-		c.JSON(200, models.ApiResponse{IsError: true, Message: "Error logging in"})
+		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Error logging in"})
 		return
 	}
 
-	var user models.User
+	var user table.User
 	user.Email = userReq.Email
 	user.Password = userReq.Password
 
 	// lookup user
-	if err := ac.db.First(&user, models.User{Email: user.Email, Password: user.Password}).Error; err != nil {
-		c.JSON(200, models.ApiResponse{IsError: true, Message: "Email or password is incorrect"})
+	if err := ac.db.First(&user, table.User{Email: user.Email, Password: user.Password}).Error; err != nil {
+		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Email or password is incorrect"})
 		return
 	}
 
 	if !userHelper.HasAccessToGroup(user.ID, userReq.GroupUUID, ac.db) {
-		c.JSON(200, models.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
+		c.JSON(200, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}
 
@@ -49,5 +51,5 @@ func (ac AdminController) Login(c *gin.Context) {
 	session.Set("uid", user.ID)
 	session.Save()
 
-	c.JSON(200, models.ApiResponse{IsError: false, Value: user})
+	c.JSON(200, resp.ApiResponse{IsError: false, Value: user})
 }

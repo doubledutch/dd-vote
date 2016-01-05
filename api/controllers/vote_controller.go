@@ -8,7 +8,9 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/jordanjoz/dd-vote/models"
+	"github.com/jordanjoz/dd-vote/api/models/req"
+	"github.com/jordanjoz/dd-vote/api/models/resp"
+	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
 type (
@@ -23,27 +25,27 @@ func NewVoteController(db gorm.DB) *VoteController {
 
 func (cc VoteController) GetUserVotes(c *gin.Context) {
 	userID := sessions.Default(c).Get("uid").(uint)
-	var votes []models.Vote
+	var votes []table.Vote
 	if err := cc.db.Where("user_id = ?", userID).Find(&votes).Error; err != nil {
 		// make empty slice
-		votes = make([]models.Vote, 0)
+		votes = make([]table.Vote, 0)
 	}
 
-	c.JSON(200, models.ApiResponse{IsError: false, Value: votes})
+	c.JSON(200, resp.ApiResponse{IsError: false, Value: votes})
 }
 
 func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
-	var voteReq models.VoteCreateRequest
+	var voteReq req.VoteCreateRequest
 	if err := c.BindJSON(&voteReq); err != nil {
 		log.Printf("Unable request: %s", err)
-		c.JSON(200, models.ApiResponse{IsError: true, Message: "Error parsing request"})
+		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Error parsing request"})
 		return
 	}
 
 	// lookup post by uuid
-	var post models.Post
+	var post table.Post
 	if err := cc.db.Where("uuid = ?", voteReq.PostUUID).First(&post).Error; err != nil {
-		c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Question does not exist"})
+		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Question does not exist"})
 		return
 	}
 
@@ -54,7 +56,7 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	tx := cc.db.Begin()
 
 	// attempt to get existing vote
-	var vote models.Vote
+	var vote table.Vote
 	isChangingVote := false
 	if err := tx.Where("user_id = ? AND post_id = ?", userID, post.ID).First(&vote).Error; err != nil {
 		// vote does not exist
@@ -64,13 +66,13 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 		vote.Value = voteReq.Value
 		if err := tx.Create(&vote).Error; err != nil {
 			log.Printf("Unable to create vote: %s", err)
-			c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Unable to create vote"})
+			c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Unable to create vote"})
 			return
 		}
 	} else {
 		// don't allow user to vote same way multiple times
 		if vote.Value == voteReq.Value {
-			c.JSON(http.StatusOK, models.ApiResponse{IsError: true, Message: "Already voted that way"})
+			c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Already voted that way"})
 			return
 		} else {
 			// changing vote
@@ -98,5 +100,5 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	// commit transaction
 	tx.Commit()
 
-	c.JSON(201, models.ApiResponse{IsError: false, Value: post})
+	c.JSON(201, resp.ApiResponse{IsError: false, Value: post})
 }
