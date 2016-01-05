@@ -13,11 +13,9 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-type (
-	VoteController struct {
-		db gorm.DB
-	}
-)
+type VoteController struct {
+	db gorm.DB
+}
 
 func NewVoteController(db gorm.DB) *VoteController {
 	return &VoteController{db: db}

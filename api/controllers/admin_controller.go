@@ -13,11 +13,9 @@ import (
 	userHelper "github.com/jordanjoz/dd-vote/api/user"
 )
 
-type (
-	AdminController struct {
-		db gorm.DB
-	}
-)
+type AdminController struct {
+	db gorm.DB
+}
 
 func NewAdminController(db gorm.DB) *AdminController {
 	return &AdminController{db: db}

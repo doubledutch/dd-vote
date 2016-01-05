@@ -8,11 +8,9 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-type (
-	GroupController struct {
-		db gorm.DB
-	}
-)
+type GroupController struct {
+	db gorm.DB
+}
 
 func NewGroupController(db gorm.DB) *GroupController {
 	return &GroupController{db: db}

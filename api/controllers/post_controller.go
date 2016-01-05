@@ -12,11 +12,9 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-type (
-	PostController struct {
-		db gorm.DB
-	}
-)
+type PostController struct {
+	db gorm.DB
+}
 
 func NewPostController(db gorm.DB) *PostController {
 	return &PostController{db: db}

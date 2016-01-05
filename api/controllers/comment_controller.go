@@ -12,11 +12,9 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-type (
-	CommentController struct {
-		db gorm.DB
-	}
-)
+type CommentController struct {
+	db gorm.DB
+}
 
 func NewCommentController(db gorm.DB) *CommentController {
 	return &CommentController{db: db}

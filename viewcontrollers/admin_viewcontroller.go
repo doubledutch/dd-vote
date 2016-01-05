@@ -9,11 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type (
-	AdminViewController struct {
-		db gorm.DB
-	}
-)
+type AdminViewController struct {
+	db gorm.DB
+}
 
 func NewAdminViewController(db gorm.DB) *AdminViewController {
 	return &AdminViewController{db: db}

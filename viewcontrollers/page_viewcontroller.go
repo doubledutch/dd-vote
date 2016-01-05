@@ -10,11 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type (
-	PageViewController struct {
-		db gorm.DB
-	}
-)
+type PageViewController struct {
+	db gorm.DB
+}
 
 func NewPageViewController(db gorm.DB) *PageViewController {
 	return &PageViewController{db: db}

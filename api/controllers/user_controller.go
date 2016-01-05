@@ -13,11 +13,9 @@ import (
 	userHelper "github.com/jordanjoz/dd-vote/api/user"
 )
 
-type (
-	UserController struct {
-		db gorm.DB
-	}
-)
+type UserController struct {
+	db gorm.DB
+}
 
 func NewUserController(db gorm.DB) *UserController {
 	return &UserController{db: db}
