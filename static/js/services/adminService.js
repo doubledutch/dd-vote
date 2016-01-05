@@ -7,7 +7,7 @@ angular.module('adminService', [])
             login: function (userData) {
                 return $http({
                     method: 'POST',
-                    url: '../../admin/login',
+                    url: '../../api/v1/admin/login',
                     headers: {'Content-Type': 'application/json'},
                     data: userData
                 });

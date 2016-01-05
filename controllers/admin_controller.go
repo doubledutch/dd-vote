@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jordanjoz/dd-vote/models"
+	userHelper "github.com/jordanjoz/dd-vote/user"
 )
 
 type (
@@ -35,6 +36,11 @@ func (ac AdminController) Login(c *gin.Context) {
 	// lookup user
 	if err := ac.db.First(&user, models.User{Email: user.Email, Password: user.Password}).Error; err != nil {
 		c.JSON(200, models.ApiResponse{IsError: true, Message: "Email or password is incorrect"})
+		return
+	}
+
+	if !userHelper.HasAccessToGroup(user.ID, userReq.GroupUUID, ac.db) {
+		c.JSON(200, models.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}
 

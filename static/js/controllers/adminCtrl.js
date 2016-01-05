@@ -9,6 +9,7 @@ angular.module('adminCtrl', ['ngRoute'])
         var path = $location.path().split("/");
         var groupId = path.pop();
         $scope.loginData.groupId = groupId;
+        $scope.groupId = groupId;
 
         $scope.adminLogin = function() {
 

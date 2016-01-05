@@ -5,9 +5,10 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jordanjoz/dd-vote/models"
+
+	userHelper "github.com/jordanjoz/dd-vote/user"
 )
 
 type (
@@ -41,16 +42,12 @@ func (uc UserController) LoginWithClientID(c *gin.Context) {
 	}
 
 	// set user logged in
-	session := sessions.Default(c)
-	session.Set("uid", user.ID)
-	session.Save()
+	userHelper.StoreUserIDInCookie(c, user.ID)
 
 	c.JSON(200, models.ApiResponse{IsError: false, Value: user})
 }
 
 func (uc UserController) Logout(c *gin.Context) {
-	session := sessions.Default(c)
-	session.Set("uid", nil)
-	session.Save()
+	userHelper.ClearUserIDFromCookie(c)
 	c.JSON(200, models.ApiResponse{IsError: false, Message: "User logged out"})
 }

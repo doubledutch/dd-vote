@@ -18,6 +18,7 @@ type UserRequest struct {
 }
 
 type AdminLoginRequest struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Email     string `json:"email" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	GroupUUID string `json:"groupId" binding:"required"`
 }

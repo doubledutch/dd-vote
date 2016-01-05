@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/jordanjoz/dd-vote/controllers"
 	"github.com/jordanjoz/dd-vote/models"
+	"github.com/jordanjoz/dd-vote/user"
 	"github.com/jordanjoz/dd-vote/viewcontrollers"
 
 	_ "github.com/lib/pq"
@@ -27,7 +28,7 @@ func main() {
 	db.DB().SetMaxOpenConns(100)
 
 	// run migrations
-	db.AutoMigrate(&models.Post{}, &models.Group{}, &models.User{}, &models.Vote{}, &models.Comment{})
+	db.AutoMigrate(&models.Post{}, &models.Group{}, &models.User{}, &models.Vote{}, &models.Comment{}, &models.Permission{})
 
 	// get api controller instances
 	pc := controllers.NewPostController(db)
@@ -85,13 +86,8 @@ func main() {
 }
 
 func UseAuth(c *gin.Context) {
-	session := sessions.Default(c)
-	// verify that user id is set
-	v := session.Get("uid") // TODO - use UUID?
-	if v == nil {
+	if !user.IsLoggedIn(c) {
 		c.JSON(401, models.ApiResponse{IsError: false, Message: "User is not logged in"})
 		c.Abort()
 	}
-
-	//TODO -verify that user id exists?
 }
