@@ -2,7 +2,7 @@
 angular.module('mainCtrl', ['ngRoute'])
 
     // inject the Snack service into our controller
-    .controller('mainController', function($scope, $http, $location, $anchorScroll, $routeParams, $timeout, $interval, Snack, User, Group) {
+    .controller('mainController', function($scope, $http, $location, $anchorScroll, $routeParams, $timeout, $interval, Snack, User, Group, Vote) {
 
         // sort by controvery rating
         $scope.Math = window.Math;
@@ -49,6 +49,23 @@ angular.module('mainCtrl', ['ngRoute'])
         // queued data to load
         $scope.queuedData = [];
 
+        var loadUserVotes = function () {
+          Vote.getUserVotes()
+              .success(function(data) {
+                  console.log(data);
+                  for (var i in data.value) {
+                      var postUUID = data.value[i].post_uuid;
+                      console.log(data.value[i].post_uuid)
+                      for (var j in $scope.snacks) {
+                        console.log("snack uuid", $scope.snacks[j].uuid)
+                        if ($scope.snacks[j].uuid == postUUID) {
+                          $scope.snacks[j].vote_value = data.value[i].value;
+                        }
+                      }
+                  }
+              });
+        }
+
         var loadData = function() {
             // get all the snacks first and bind it to the $scope.snacks object
             // use the function we created in our service
@@ -62,6 +79,7 @@ angular.module('mainCtrl', ['ngRoute'])
                     if ($scope.loading) {
                         $scope.snacks = data.value;
                         $scope.loading = false;
+                        loadUserVotes();
                     }
                     else if (!angular.equals($scope.snacks, data.value)) {
                         $('#new-data-toast').stop().fadeIn(400);
@@ -170,7 +188,7 @@ angular.module('mainCtrl', ['ngRoute'])
             // update votes values so the user gets instant feedback
             // this means we make the user think their vote worked immediately
             for (index = 0; index < $scope.snacks.length; index++ ){
-                if ($scope.snacks[index].id == snackId) {
+                if ($scope.snacks[index].uuid == snackId) {
 
                     // remove old vote value
                     if ($scope.snacks[index].vote_value == -1) {

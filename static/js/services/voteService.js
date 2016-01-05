@@ -4,6 +4,15 @@ angular.module('voteService', [])
     .factory('Vote', function($http) {
 
         return {
+
+            // get all votes for the current user
+            getUserVotes : function() {
+                return $http({
+                    method: 'GET',
+                    url: '../../api/v1/user/votes'
+                });
+            },
+
             // save a vote
             save : function(voteData) {
                 return $http({
