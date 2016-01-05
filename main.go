@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/jordanjoz/dd-vote/controllers"
 	"github.com/jordanjoz/dd-vote/models"
+	"github.com/jordanjoz/dd-vote/viewcontrollers"
 
 	_ "github.com/lib/pq"
 )
@@ -28,14 +29,17 @@ func main() {
 	// run migrations
 	db.AutoMigrate(&models.Post{}, &models.Group{}, &models.User{}, &models.Vote{}, &models.Comment{})
 
-	// get controller instances
+	// get api controller instances
 	pc := controllers.NewPostController(db)
 	gc := controllers.NewGroupController(db)
 	cc := controllers.NewCommentController(db)
 	uc := controllers.NewUserController(db)
 	ac := controllers.NewAdminController(db)
 	vc := controllers.NewVoteController(db)
+
+	// get view controller instances
 	pvc := controllers.NewPageViewController(db)
+	avc := viewcontrollers.NewAdminViewController(db)
 
 	// init router
 	router := gin.Default()
@@ -53,6 +57,7 @@ func main() {
 	views := router.Group("")
 	{
 		views.GET("/g/:gid", pvc.ShowGroupPage)
+		views.GET("/admin/:gid", avc.ShowAdminPage)
 	}
 
 	// v1 api calls

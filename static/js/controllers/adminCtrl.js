@@ -30,11 +30,5 @@ angular.module('adminCtrl', ['ngRoute'])
     })
 
     .config(function ($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/index.php/admin/:groupId', {
-                controller: 'MainController'
-            });
-
-        // configure html5 to get links working on jsfiddle
         $locationProvider.html5Mode(true);
     });
