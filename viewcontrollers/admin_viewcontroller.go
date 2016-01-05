@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/jinzhu/gorm"
-	"github.com/jordanjoz/dd-vote/user"
+	"github.com/jordanjoz/dd-vote/api/user"
 
 	"github.com/gin-gonic/gin"
 )

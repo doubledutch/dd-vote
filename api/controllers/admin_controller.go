@@ -10,7 +10,7 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/req"
 	"github.com/jordanjoz/dd-vote/api/models/resp"
 	"github.com/jordanjoz/dd-vote/api/models/table"
-	userHelper "github.com/jordanjoz/dd-vote/user"
+	userHelper "github.com/jordanjoz/dd-vote/api/user"
 )
 
 type (

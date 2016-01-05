@@ -10,7 +10,7 @@ import (
 
 	"github.com/jordanjoz/dd-vote/api/models/resp"
 	"github.com/jordanjoz/dd-vote/api/models/table"
-	"github.com/jordanjoz/dd-vote/user"
+	"github.com/jordanjoz/dd-vote/api/user"
 	"github.com/jordanjoz/dd-vote/viewcontrollers"
 
 	_ "github.com/lib/pq"
