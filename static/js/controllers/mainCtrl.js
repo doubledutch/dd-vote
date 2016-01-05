@@ -52,12 +52,9 @@ angular.module('mainCtrl', ['ngRoute'])
         var loadUserVotes = function () {
           Vote.getUserVotes()
               .success(function(data) {
-                  console.log(data);
                   for (var i in data.value) {
                       var postUUID = data.value[i].post_uuid;
-                      console.log(data.value[i].post_uuid)
                       for (var j in $scope.snacks) {
-                        console.log("snack uuid", $scope.snacks[j].uuid)
                         if ($scope.snacks[j].uuid == postUUID) {
                           $scope.snacks[j].vote_value = data.value[i].value;
                         }
