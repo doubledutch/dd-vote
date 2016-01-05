@@ -39,7 +39,7 @@ func main() {
 	vc := controllers.NewVoteController(db)
 
 	// get view controller instances
-	pvc := controllers.NewPageViewController(db)
+	pvc := viewcontrollers.NewPageViewController(db)
 	avc := viewcontrollers.NewAdminViewController(db)
 
 	// init router
