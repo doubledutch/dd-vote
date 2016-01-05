@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/jinzhu/gorm"
@@ -23,7 +22,6 @@ func NewCommentController(db gorm.DB) *CommentController {
 func (cc CommentController) CreateComment(c *gin.Context) {
 	// lookup post by uuid
 	postUUID := c.Query("post")
-	log.Println(postUUID)
 	var post table.Post
 	if err := cc.db.Where("uuid = ?", postUUID).First(&post).Error; err != nil {
 		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Question does not exist"})

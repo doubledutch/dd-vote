@@ -39,6 +39,7 @@ func main() {
 	uc := controllers.NewUserController(db)
 	ac := controllers.NewAdminController(db)
 	vc := controllers.NewVoteController(db)
+	ec := controllers.NewExportController(db)
 
 	// get view controller instances
 	pvc := viewcontrollers.NewPageViewController(db)
@@ -81,6 +82,7 @@ func main() {
 			v1auth.POST("/comment", cc.CreateComment)
 			v1auth.POST("/vote", vc.CreateOrUpdateVote)
 			v1auth.GET("/user/votes", vc.GetUserVotes)
+			v1auth.GET("/export/all/:gid", ec.GetAllQuestionsCSV)
 		}
 	}
 
