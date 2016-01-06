@@ -1,5 +1,6 @@
 package table
 
+// Comment database model for comments on questions
 type Comment struct {
 	BaseModel
 	Comment string `json:"comment" binding:"required"`

@@ -1,5 +1,7 @@
 package table
 
+// User database model includes users from logged in with client credentials
+// (no password) and admins (with emails and passwords)
 type User struct {
 	BaseModel
 	Firstname string `json:"firstname"`

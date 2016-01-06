@@ -14,6 +14,7 @@ const (
 	GroupAdmin = 2
 )
 
+// HasAccessToGroup checks if a user is an admin for a group
 func HasAccessToGroup(uid uint, groupUUID string, db gorm.DB) bool {
 	var permissions []table.Permission
 	db.Where("user_id = ?", uid).Find(&permissions)
@@ -29,23 +30,27 @@ func HasAccessToGroup(uid uint, groupUUID string, db gorm.DB) bool {
 	return false
 }
 
+// IsLoggedIn checks if the current user is logged in
 func IsLoggedIn(c *gin.Context) bool {
 	session := sessions.Default(c)
 	return session.Get("uid") != nil
 }
 
+// GetUserIDFromCookie gets the userId for the current user
 func GetUserIDFromCookie(c *gin.Context) uint {
 	session := sessions.Default(c)
 	uid := session.Get("uid").(uint)
 	return uid
 }
 
+// StoreUserIDInCookie stores the userId for teh current user
 func StoreUserIDInCookie(c *gin.Context, userID uint) {
 	session := sessions.Default(c)
 	session.Set("uid", userID)
 	session.Save()
 }
 
+// ClearUserIDFromCookie clears the userId for the current suer
 func ClearUserIDFromCookie(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("uid", nil)

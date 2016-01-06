@@ -12,24 +12,27 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
+// ExportController manages api endpoints for exporting reports
 type ExportController struct {
 	db gorm.DB
 }
 
+// NewExportController creates a new instance
 func NewExportController(db gorm.DB) *ExportController {
 	return &ExportController{db: db}
 }
 
+// GetAllQuestionsCSV serves a csv files report of all the questions in a group
 func (ec ExportController) GetAllQuestionsCSV(c *gin.Context) {
 	groupUUID := c.Param("gid")
 	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), groupUUID, ec.db) {
-		c.JSON(http.StatusForbidden, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
+		c.JSON(http.StatusForbidden, resp.APIResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}
 
 	var group table.Group
 	if err := ec.db.Where("name = ?", groupUUID).First(&group).Error; err != nil {
-		c.JSON(http.StatusNotFound, resp.ApiResponse{IsError: true, Message: "Group does not exist"})
+		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 

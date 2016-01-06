@@ -13,37 +13,43 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
+// VoteController manages api endpoints for voting
 type VoteController struct {
 	db gorm.DB
 }
 
+// NewVoteController creates a new instance
 func NewVoteController(db gorm.DB) *VoteController {
 	return &VoteController{db: db}
 }
 
+// GetUserVotes gets the user's votes for a group
 func (cc VoteController) GetUserVotes(c *gin.Context) {
+	// TODO user helper method
 	userID := sessions.Default(c).Get("uid").(uint)
 	var votes []table.Vote
+	// TODO only get votes for specific group
 	if err := cc.db.Where("user_id = ?", userID).Find(&votes).Error; err != nil {
 		// make empty slice
 		votes = make([]table.Vote, 0)
 	}
 
-	c.JSON(200, resp.ApiResponse{IsError: false, Value: votes})
+	c.JSON(http.StatusOK, resp.APIResponse{IsError: false, Value: votes})
 }
 
+// CreateOrUpdateVote create a new vote or update the user's existing one
 func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	var voteReq req.VoteCreateRequest
 	if err := c.BindJSON(&voteReq); err != nil {
 		log.Printf("Unable request: %s", err)
-		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Error parsing request"})
+		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Error parsing request"})
 		return
 	}
 
 	// lookup post by uuid
 	var post table.Post
 	if err := cc.db.Where("uuid = ?", voteReq.PostUUID).First(&post).Error; err != nil {
-		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Question does not exist"})
+		c.JSON(http.StatusOK, resp.APIResponse{IsError: true, Message: "Question does not exist"})
 		return
 	}
 
@@ -64,13 +70,13 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 		vote.Value = voteReq.Value
 		if err := tx.Create(&vote).Error; err != nil {
 			log.Printf("Unable to create vote: %s", err)
-			c.JSON(http.StatusInternalServerError, resp.ApiResponse{IsError: true, Message: "Unable to create vote"})
+			c.JSON(http.StatusInternalServerError, resp.APIResponse{IsError: true, Message: "Unable to create vote"})
 			return
 		}
 	} else {
 		// don't allow user to vote same way multiple times
 		if vote.Value == voteReq.Value {
-			c.JSON(http.StatusConflict, resp.ApiResponse{IsError: true, Message: "Already voted that way"})
+			c.JSON(http.StatusConflict, resp.APIResponse{IsError: true, Message: "Already voted that way"})
 			return
 		} else {
 			// changing vote
@@ -98,5 +104,5 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	// commit transaction
 	tx.Commit()
 
-	c.JSON(http.StatusOK, resp.ApiResponse{IsError: false, Value: post})
+	c.JSON(http.StatusOK, resp.APIResponse{IsError: false, Value: post})
 }

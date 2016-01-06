@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -89,9 +90,10 @@ func main() {
 	router.Run(":8080")
 }
 
+// UseAuth rejects unauthorized api requests
 func UseAuth(c *gin.Context) {
 	if !auth.IsLoggedIn(c) {
-		c.JSON(401, resp.ApiResponse{IsError: false, Message: "User is not logged in"})
+		c.JSON(http.StatusUnauthorized, resp.APIResponse{IsError: false, Message: "User is not logged in"})
 		c.Abort()
 	}
 }

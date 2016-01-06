@@ -10,14 +10,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// PageViewController manages browser requests related to group pages
 type PageViewController struct {
 	db gorm.DB
 }
 
+// NewPageViewController creates a new instance
 func NewPageViewController(db gorm.DB) *PageViewController {
 	return &PageViewController{db: db}
 }
 
+// ShowGroupPage shows the group page, which will use its front-end to make
+// api requests for loading the appropriate data
 func (gc PageViewController) ShowGroupPage(c *gin.Context) {
 	// create new group if it does not exist
 	gid := c.Param("gid")

@@ -1,5 +1,6 @@
 package table
 
+// Post (Question) database model for questions asked in a group
 type Post struct {
 	BaseModel
 	Name      string `json:"name" sql:"unique_index:idx_name_groupid" binding:"required"`
