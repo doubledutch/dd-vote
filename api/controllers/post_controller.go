@@ -24,7 +24,7 @@ func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
 	groupname := c.Query("group")
 	var group table.Group
 	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
-		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Group does not exist"})
+		c.JSON(http.StatusNotFound, resp.ApiResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 
@@ -49,7 +49,7 @@ func (pc PostController) CreatePost(c *gin.Context) {
 	groupname := c.Query("group")
 	var group table.Group
 	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
-		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Group does not exist"})
+		c.JSON(http.StatusNotFound, resp.ApiResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 
@@ -62,12 +62,12 @@ func (pc PostController) CreatePost(c *gin.Context) {
 
 	// create new question
 	if err := pc.db.Create(&post).Error; err != nil {
-		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Question has already been asked"})
+		c.JSON(http.StatusConflict, resp.ApiResponse{IsError: true, Message: "Question has already been asked"})
 		return
 	}
 
 	// make sure comments are empty slice and not nil
 	post.Comments = make([]table.Comment, 0)
 
-	c.JSON(201, resp.ApiResponse{IsError: false, Value: post})
+	c.JSON(http.StatusCreated, resp.ApiResponse{IsError: false, Value: post})
 }

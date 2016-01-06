@@ -64,13 +64,13 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 		vote.Value = voteReq.Value
 		if err := tx.Create(&vote).Error; err != nil {
 			log.Printf("Unable to create vote: %s", err)
-			c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Unable to create vote"})
+			c.JSON(http.StatusInternalServerError, resp.ApiResponse{IsError: true, Message: "Unable to create vote"})
 			return
 		}
 	} else {
 		// don't allow user to vote same way multiple times
 		if vote.Value == voteReq.Value {
-			c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Already voted that way"})
+			c.JSON(http.StatusConflict, resp.ApiResponse{IsError: true, Message: "Already voted that way"})
 			return
 		} else {
 			// changing vote
@@ -98,5 +98,5 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	// commit transaction
 	tx.Commit()
 
-	c.JSON(201, resp.ApiResponse{IsError: false, Value: post})
+	c.JSON(http.StatusOK, resp.ApiResponse{IsError: false, Value: post})
 }

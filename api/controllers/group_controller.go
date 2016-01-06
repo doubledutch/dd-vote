@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/jinzhu/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -20,5 +22,6 @@ func (gc GroupController) GetOrCreateGroup(c *gin.Context) {
 	var group table.Group
 	c.Bind(&group)
 	gc.db.FirstOrCreate(&group, table.Group{Name: group.Name})
-	c.JSON(201, resp.ApiResponse{IsError: false, Value: group})
+	// TODO http response code should reflect get/create outcome
+	c.JSON(http.StatusCreated, resp.ApiResponse{IsError: false, Value: group})
 }

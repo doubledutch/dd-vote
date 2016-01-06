@@ -23,13 +23,13 @@ func NewExportController(db gorm.DB) *ExportController {
 func (ec ExportController) GetAllQuestionsCSV(c *gin.Context) {
 	groupUUID := c.Param("gid")
 	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), groupUUID, ec.db) {
-		c.JSON(200, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
+		c.JSON(http.StatusForbidden, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}
 
 	var group table.Group
 	if err := ec.db.Where("name = ?", groupUUID).First(&group).Error; err != nil {
-		c.JSON(http.StatusOK, resp.ApiResponse{IsError: true, Message: "Group does not exist"})
+		c.JSON(http.StatusNotFound, resp.ApiResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 

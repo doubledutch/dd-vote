@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/jinzhu/gorm"
 
@@ -25,7 +26,7 @@ func (uc UserController) LoginWithClientID(c *gin.Context) {
 	var userReq req.UserRequest
 	if err := c.BindJSON(&userReq); err != nil {
 		log.Printf("Unable to parse user: %s", err)
-		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Error logging in"})
+		c.JSON(http.StatusBadRequest, resp.ApiResponse{IsError: true, Message: "Error logging in"})
 		return
 	}
 
@@ -34,17 +35,17 @@ func (uc UserController) LoginWithClientID(c *gin.Context) {
 
 	// create or get user from db
 	if err := uc.db.FirstOrCreate(&user, table.User{ClientID: user.ClientID}).Error; err != nil {
-		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Error logging in"})
+		c.JSON(http.StatusBadRequest, resp.ApiResponse{IsError: true, Message: "Error logging in"})
 		return
 	}
 
 	// set user logged in
 	auth.StoreUserIDInCookie(c, user.ID)
 
-	c.JSON(200, resp.ApiResponse{IsError: false, Value: user})
+	c.JSON(http.StatusOK, resp.ApiResponse{IsError: false, Value: user})
 }
 
 func (uc UserController) Logout(c *gin.Context) {
 	auth.ClearUserIDFromCookie(c)
-	c.JSON(200, resp.ApiResponse{IsError: false, Message: "User logged out"})
+	c.JSON(http.StatusOK, resp.ApiResponse{IsError: false, Message: "User logged out"})
 }

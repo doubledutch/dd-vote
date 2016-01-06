@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/jinzhu/gorm"
 
@@ -25,7 +26,7 @@ func (ac AdminController) Login(c *gin.Context) {
 	var userReq req.AdminLoginRequest
 	if err := c.BindJSON(&userReq); err != nil {
 		log.Printf("Unable to parse user: %s", err)
-		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Error logging in"})
+		c.JSON(http.StatusBadRequest, resp.ApiResponse{IsError: true, Message: "Error logging in"})
 		return
 	}
 
@@ -34,12 +35,12 @@ func (ac AdminController) Login(c *gin.Context) {
 
 	// lookup user in db
 	if err := ac.db.First(&user, table.User{Email: user.Email, Password: user.Password}).Error; err != nil {
-		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Email or password is incorrect"})
+		c.JSON(http.StatusBadRequest, resp.ApiResponse{IsError: true, Message: "Email or password is incorrect"})
 		return
 	}
 
 	if !auth.HasAccessToGroup(user.ID, userReq.GroupUUID, ac.db) {
-		c.JSON(200, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
+		c.JSON(http.StatusForbidden, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}
 
@@ -48,5 +49,5 @@ func (ac AdminController) Login(c *gin.Context) {
 	session.Set("uid", user.ID)
 	session.Save()
 
-	c.JSON(200, resp.ApiResponse{IsError: false, Value: user})
+	c.JSON(http.StatusOK, resp.ApiResponse{IsError: false, Value: user})
 }
