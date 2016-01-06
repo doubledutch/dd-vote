@@ -30,10 +30,7 @@ func (uc UserController) LoginWithClientID(c *gin.Context) {
 	}
 
 	// create user object from request
-	var user table.User
-	user.ClientID = userReq.ClientID
-	user.Firstname = userReq.Firstname
-	user.Lastname = userReq.Lastname
+	user := userReq.ToUser()
 
 	// create or get user from db
 	if err := uc.db.FirstOrCreate(&user, table.User{ClientID: user.ClientID}).Error; err != nil {

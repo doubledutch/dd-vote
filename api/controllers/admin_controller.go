@@ -29,11 +29,10 @@ func (ac AdminController) Login(c *gin.Context) {
 		return
 	}
 
-	var user table.User
-	user.Email = userReq.Email
-	user.Password = userReq.Password
+	// create user object from request
+	user := userReq.ToUser()
 
-	// lookup user
+	// lookup user in db
 	if err := ac.db.First(&user, table.User{Email: user.Email, Password: user.Password}).Error; err != nil {
 		c.JSON(200, resp.ApiResponse{IsError: true, Message: "Email or password is incorrect"})
 		return
