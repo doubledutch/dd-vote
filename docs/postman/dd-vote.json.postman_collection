@@ -1,0 +1,1003 @@
+{
+	"id": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+	"name": "DD Vote",
+	"description": "",
+	"order": [],
+	"folders": [
+		{
+			"owner": "166393",
+			"name": "Comments",
+			"description": "",
+			"order": [
+				"9f6f1241-c9cb-3c3f-5496-6d07da475280"
+			],
+			"id": "592dde58-b258-eefb-82ea-7e4bea3ebd62",
+			"lastUpdatedBy": {
+				"id": "166393",
+				"username": "Jordan Jozwiak"
+			}
+		},
+		{
+			"owner": "166393",
+			"name": "Groups",
+			"description": "",
+			"order": [
+				"011403f5-b192-39d2-7516-635cf9be5ef9"
+			],
+			"id": "530f0131-ffe8-6603-edb1-a41efa486816",
+			"lastUpdatedBy": {
+				"id": "166393",
+				"username": "Jordan Jozwiak"
+			}
+		},
+		{
+			"owner": "166393",
+			"name": "Posts (Questions)",
+			"description": "",
+			"order": [
+				"85a17472-59bf-ea1b-124a-583423608b84",
+				"fa3a98ba-c0c3-4fce-d38c-441c263ba217"
+			],
+			"id": "2ee89db1-34f5-eaa8-d2c1-957c5d438dea",
+			"lastUpdatedBy": {
+				"id": "166393",
+				"username": "Jordan Jozwiak"
+			},
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b"
+		},
+		{
+			"owner": "166393",
+			"name": "Users",
+			"description": "Log user out",
+			"order": [
+				"c055fd3f-3ffb-6586-552e-49b26deb9140",
+				"09efb18c-94e3-3c62-e712-46588962e776",
+				"e1eb5dee-ae6b-4dd1-c5ca-4e3408c2e4e0"
+			],
+			"id": "79b23cbf-758d-214c-36ff-64bb797bf090",
+			"lastUpdatedBy": {
+				"id": "166393",
+				"username": "Jordan Jozwiak"
+			}
+		},
+		{
+			"owner": "166393",
+			"name": "Votes",
+			"description": "",
+			"order": [
+				"7f6b3095-c114-7bf5-7664-5912524eca05",
+				"6ddc729f-d88b-2d42-b9ef-4b259b0d4242"
+			],
+			"id": "5dde213b-832d-b47a-0c82-1d8383bbc478",
+			"lastUpdatedBy": {
+				"id": "166393",
+				"username": "Jordan Jozwiak"
+			}
+		}
+	],
+	"timestamp": 0,
+	"owner": "166393",
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "011403f5-b192-39d2-7516-635cf9be5ef9",
+			"headers": "Content-Type: application/json\n",
+			"url": "{{server}}/api/v1/groups",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1452101588335,
+			"name": "/groups",
+			"description": "Create a new group",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 201,
+						"name": "Created",
+						"detail": "The request has been fulfilled and resulted in a new resource being created."
+					},
+					"time": 14,
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "163",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 06 Jan 2016 17:32:55 GMT",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":false,\"value\":{\"created_at\":\"2016-01-06T09:32:55.046326241-08:00\",\"updated_at\":\"2016-01-06T09:32:55.046326241-08:00\",\"name\":\"my-new-group\",\"Posts\":null}}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"isSample": true,
+					"scrollToResult": true,
+					"runTests": true,
+					"id": "1c48f271-1a55-d139-83bc-3c57dba02f59",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8081/api/v1/groups",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"name": "Postman-Token",
+								"value": "273162fc-7b10-5c1b-1775-2b9db1ea7a8b"
+							}
+						],
+						"data": "{\n    \"name\" : \"my-new-group\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{\n    \"name\" : \"my-new-group\"\n}"
+		},
+		{
+			"headers": "Content-Type: application/json\n",
+			"url": "{{server}}/api/v1/logout",
+			"pathVariables": {},
+			"preRequestScript": "",
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/logout",
+			"description": "",
+			"descriptionFormat": "html",
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"folder": "79b23cbf-758d-214c-36ff-64bb797bf090",
+			"rawModeData": "",
+			"id": "09efb18c-94e3-3c62-e712-46588962e776",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 10,
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "44",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 06 Jan 2016 17:36:56 GMT",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":false,\"message\":\"User logged out\"}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"isSample": true,
+					"scrollToResult": true,
+					"runTests": true,
+					"id": "1d0e654d-9d14-1276-5deb-a20e8fda9841",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8081/api/v1/logout",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"name": "Postman-Token",
+								"value": "52531387-64a8-358f-3923-2dc6decc903f"
+							}
+						],
+						"data": "",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			]
+		},
+		{
+			"id": "6ddc729f-d88b-2d42-b9ef-4b259b0d4242",
+			"headers": "Content-Type: application/json\nCache-Control: no-cache\nPostman-Token: 3d561348-09d0-1cae-e977-e3052a60b3b5\n",
+			"url": "{{server}}/api/v1/groups/<<group-name>>/votes/user",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1452101687853,
+			"name": "/groups/:group/votes/user",
+			"description": "Get all votes in a group for currently logged in user",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 17,
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "343",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 06 Jan 2016 17:36:17 GMT",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":false,\"value\":[{\"created_at\":\"2016-01-06T09:18:53.51473-08:00\",\"updated_at\":\"2016-01-06T09:18:53.51473-08:00\",\"post_uuid\":\"4eccebfb-fe38-4925-9640-ea17195390bb\",\"value\":-1},{\"created_at\":\"2016-01-06T08:55:27.11325-08:00\",\"updated_at\":\"2016-01-06T09:35:22.700145-08:00\",\"post_uuid\":\"78c1e028-60da-41ca-ab57-83ddcda8578e\",\"value\":-1}]}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"isSample": true,
+					"scrollToResult": true,
+					"runTests": true,
+					"id": "32b85825-0bda-cbec-2aaa-09265e1113d2",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8081/api/v1/groups/my-first-grouop/votes/user",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"type": "text",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"type": "text",
+								"name": "Postman-Token",
+								"value": "7e798470-aaeb-d769-7423-b44da7096d78"
+							}
+						],
+						"data": "{\n    \"value\" : -1\n}",
+						"method": "GET",
+						"dataMode": "params"
+					}
+				}
+			]
+		},
+		{
+			"id": "7f6b3095-c114-7bf5-7664-5912524eca05",
+			"headers": "Content-Type: application/json\nCache-Control: no-cache\nPostman-Token: 3d561348-09d0-1cae-e977-e3052a60b3b5\n",
+			"url": "{{server}}/api/v1/posts/<<post-uuid>>/votes",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1452101798440,
+			"name": "/posts/:post/votes",
+			"description": "Vote on a question",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 17,
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "229",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 06 Jan 2016 17:35:22 GMT",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":false,\"value\":{\"created_at\":\"2016-01-06T08:55:22.83611-08:00\",\"updated_at\":\"2016-01-06T09:35:22.701078747-08:00\",\"name\":\"testing\",\"uuid\":\"78c1e028-60da-41ca-ab57-83ddcda8578e\",\"upvotes\":0,\"downvotes\":1,\"comments\":null}}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"isSample": true,
+					"scrollToResult": true,
+					"runTests": true,
+					"id": "29c4c241-496b-036b-ce2d-e6464ecce302",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8081/api/v1/posts/78c1e028-60da-41ca-ab57-83ddcda8578e/votes",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"type": "text",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"type": "text",
+								"name": "Postman-Token",
+								"value": "267dde43-dd60-9c65-0e4d-5e1d6265ff4a"
+							}
+						],
+						"data": "{\n    \"value\" : -1\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{\n    \"value\" : -1\n}"
+		},
+		{
+			"id": "85a17472-59bf-ea1b-124a-583423608b84",
+			"headers": "Content-Type: application/json\n",
+			"url": "{{server}}/api/v1/groups/<<group-name>>/posts",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1452101860767,
+			"name": "/groups/:group/posts",
+			"description": "Get all questions in a group",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"responses": [
+				{
+					"owner": "166393",
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK"
+					},
+					"time": "18",
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "467",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 03 Jan 2016 05:40:32 GMT",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "[{\"CreatedAt\":\"2016-01-02T21:39:07.9694-08:00\",\"UpdatedAt\":\"2016-01-02T21:39:07.9694-08:00\",\"DeletedAt\":null,\"name\":\"new question\",\"upvotes\":0,\"downvotes\":0},{\"CreatedAt\":\"2016-01-02T21:09:19.835587-08:00\",\"UpdatedAt\":\"2016-01-02T21:09:19.835587-08:00\",\"DeletedAt\":null,\"name\":\"test6\",\"upvotes\":0,\"downvotes\":0},{\"CreatedAt\":\"2016-01-02T21:08:30.567315-08:00\",\"UpdatedAt\":\"2016-01-02T21:08:30.567315-08:00\",\"DeletedAt\":null,\"name\":\"test5\",\"upvotes\":0,\"downvotes\":0}]\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8080/api/v1/post?group=my-new-group",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"name": "Postman-Token",
+								"value": "97cfe651-4691-37ab-c0e4-494862017697"
+							}
+						],
+						"data": "{\n    \"name\" : \"test5\"\n}",
+						"method": "GET",
+						"dataMode": "params"
+					},
+					"requestObject": "{\"url\":\"http://localhost:8080/api/v1/post?group=my-new-group\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"name\":\"Content-Type\",\"enabled\":true},{\"key\":\"Cache-Control\",\"name\":\"Cache-Control\",\"value\":\"no-cache\"},{\"key\":\"Postman-Token\",\"name\":\"Postman-Token\",\"value\":\"97cfe651-4691-37ab-c0e4-494862017697\"}],\"data\":\"{\\n    \\\"name\\\" : \\\"test5\\\"\\n}\",\"method\":\"GET\",\"dataMode\":\"params\"}",
+					"id": "38cb17a1-3cce-7b04-0472-36d48851c7e3",
+					"lastUpdatedBy": {
+						"id": "166393",
+						"username": "Jordan Jozwiak"
+					},
+					"createdAt": "2016-01-03T05:40:39.405Z",
+					"updatedAt": "2016-01-03T05:40:39.405Z",
+					"write": true
+				}
+			]
+		},
+		{
+			"id": "9f6f1241-c9cb-3c3f-5496-6d07da475280",
+			"headers": "Content-Type: application/json\nCache-Control: no-cache\nPostman-Token: 3d561348-09d0-1cae-e977-e3052a60b3b5\n",
+			"url": "{{server}}/api/v1/posts/<<post-uuid>>/comments",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1452101556508,
+			"name": "/posts/:post/comments",
+			"description": "Add a comment to a question",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 201,
+						"name": "Created",
+						"detail": "The request has been fulfilled and resulted in a new resource being created."
+					},
+					"time": 17,
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "295",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 06 Jan 2016 17:38:15 GMT",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":false,\"value\":{\"created_at\":\"2016-01-06T09:38:15.890427-08:00\",\"updated_at\":\"2016-01-06T09:38:15.890427-08:00\",\"comment\":\"My first comment!\",\"user\":{\"created_at\":\"2016-01-06T08:55:19.654003-08:00\",\"updated_at\":\"2016-01-06T08:55:19.654003-08:00\",\"firstname\":\"Jordan\",\"lastname\":\"Joz\"}}}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"isSample": true,
+					"scrollToResult": true,
+					"runTests": true,
+					"id": "2b6581b4-ff48-849e-761f-5fce9f033fa5",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8081/api/v1/posts/78c1e028-60da-41ca-ab57-83ddcda8578e/comments",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"type": "text",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"type": "text",
+								"name": "Postman-Token",
+								"value": "2bee0c8c-b83e-2217-2292-d01d63f8fdd1"
+							}
+						],
+						"data": "{\n    \"comment\" : \"My first comment!\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{\n    \"comment\" : \"My first comment!\"\n}"
+		},
+		{
+			"id": "c055fd3f-3ffb-6586-552e-49b26deb9140",
+			"headers": "Content-Type: application/json\n",
+			"url": "{{server}}/api/v1/login",
+			"pathVariables": {},
+			"preRequestScript": "",
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/login",
+			"description": "Log user in using DD client credentials",
+			"descriptionFormat": "html",
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": "{}",
+			"folder": "79b23cbf-758d-214c-36ff-64bb797bf090",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"isFromCollection": true,
+			"collectionRequestId": "c055fd3f-3ffb-6586-552e-49b26deb9140",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 16,
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "160",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 06 Jan 2016 17:36:48 GMT",
+							"description": "The date and time that the message was sent"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":false,\"value\":{\"created_at\":\"2016-01-06T08:55:19.654003-08:00\",\"updated_at\":\"2016-01-06T08:55:19.654003-08:00\",\"firstname\":\"Jordan\",\"lastname\":\"Joz\"}}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"isSample": true,
+					"scrollToResult": true,
+					"runTests": true,
+					"id": "d70ba794-b4c1-9f08-b72a-5bcc6c0cce69",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8081/api/v1/login",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"name": "Postman-Token",
+								"value": "96e58a02-025f-24ca-0b73-6789f604ea33"
+							}
+						],
+						"data": "{\n    \"firstName\":\"Jordan\",\n    \"lastName\":\"Joz\",\n    \"userId\": 2\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{\n    \"firstName\":\"Jordan\",\n    \"lastName\":\"Joz\",\n    \"userId\": 2\n}"
+		},
+		{
+			"id": "e1eb5dee-ae6b-4dd1-c5ca-4e3408c2e4e0",
+			"headers": "Content-Type: application/json\n",
+			"url": "{{server}}/api/v1/admin/login",
+			"pathVariables": {},
+			"preRequestScript": "",
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/admin/login",
+			"description": "Log user in using admin credentials",
+			"descriptionFormat": "html",
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": "{}",
+			"folder": "79b23cbf-758d-214c-36ff-64bb797bf090",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"isFromCollection": true,
+			"collectionRequestId": "e1eb5dee-ae6b-4dd1-c5ca-4e3408c2e4e0",
+			"rawModeData": "{\n    \"email\":\"jordan+singlegroup@doubledutch.me\",\n    \"password\":\"testpass\",\n    \"groupId\":\"test5\"\n}"
+		},
+		{
+			"id": "fa3a98ba-c0c3-4fce-d38c-441c263ba217",
+			"headers": "Content-Type: application/json\nCache-Control: no-cache\nPostman-Token: 3d561348-09d0-1cae-e977-e3052a60b3b5\n",
+			"url": "{{server}}/api/v1/groups/<<group-name>>/posts",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1452101428021,
+			"name": "/groups/:group/posts",
+			"description": "Submit a new question to a group",
+			"collectionId": "c67ac1af-49cc-b2f1-dddb-67549b21ca9b",
+			"responses": [
+				{
+					"owner": "166393",
+					"status": "",
+					"responseCode": {
+						"code": 201,
+						"name": "Created"
+					},
+					"time": "13",
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "167",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 03 Jan 2016 05:39:07 GMT",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"CreatedAt\":\"2016-01-02T21:39:07.969399922-08:00\",\"UpdatedAt\":\"2016-01-02T21:39:07.969399922-08:00\",\"DeletedAt\":null,\"name\":\"new question\",\"upvotes\":0,\"downvotes\":0}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"name": "success",
+					"request": {
+						"url": "http://localhost:8080/api/v1/post?group=my-new-group",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"name": "Postman-Token",
+								"value": "33e0ab3f-dd57-147e-7f09-1181ee61f87e"
+							}
+						],
+						"data": "{\n    \"name\" : \"new question\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					},
+					"requestObject": "{\"url\":\"http://localhost:8080/api/v1/post?group=my-new-group\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"name\":\"Content-Type\",\"enabled\":true},{\"key\":\"Cache-Control\",\"name\":\"Cache-Control\",\"value\":\"no-cache\"},{\"key\":\"Postman-Token\",\"name\":\"Postman-Token\",\"value\":\"33e0ab3f-dd57-147e-7f09-1181ee61f87e\"}],\"data\":\"{\\n    \\\"name\\\" : \\\"new question\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"id": "20814c54-cd09-a4dd-7d5e-bfbfc08f0c32",
+					"lastUpdatedBy": {
+						"id": "166393",
+						"username": "Jordan Jozwiak"
+					},
+					"createdAt": "2016-01-03T05:39:22.827Z",
+					"updatedAt": "2016-01-03T05:39:22.827Z",
+					"write": true
+				},
+				{
+					"owner": "166393",
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK"
+					},
+					"time": "13",
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "59",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 03 Jan 2016 05:38:26 GMT",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":true,\"message\":\"Question has already been asked\"}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"name": "error: already-asked",
+					"request": {
+						"url": "http://localhost:8080/api/v1/post?group=my-new-group",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"name": "Postman-Token",
+								"value": "33e0ab3f-dd57-147e-7f09-1181ee61f87e"
+							}
+						],
+						"data": "{\n    \"name\" : \"new question\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					},
+					"requestObject": "{\"url\":\"http://localhost:8080/api/v1/post?group=my-new-group\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"name\":\"Content-Type\",\"enabled\":true},{\"key\":\"Cache-Control\",\"name\":\"Cache-Control\",\"value\":\"no-cache\"},{\"key\":\"Postman-Token\",\"name\":\"Postman-Token\",\"value\":\"33e0ab3f-dd57-147e-7f09-1181ee61f87e\"}],\"data\":\"{\\n    \\\"name\\\" : \\\"new question\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"id": "3adb305d-4627-dc10-022c-33738e03e571",
+					"lastUpdatedBy": {
+						"id": "166393",
+						"username": "Jordan Jozwiak"
+					},
+					"createdAt": "2016-01-03T05:39:50.171Z",
+					"updatedAt": "2016-01-03T05:39:50.171Z",
+					"write": true
+				},
+				{
+					"owner": "166393",
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK"
+					},
+					"time": "14",
+					"headers": [
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "48",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 03 Jan 2016 05:38:48 GMT",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"error\":true,\"message\":\"Group does not exist\"}\n",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"name": "error: invalid-group",
+					"request": {
+						"url": "http://localhost:8080/api/v1/post?group=my-new-group",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"name": "Content-Type",
+								"enabled": true
+							},
+							{
+								"key": "Cache-Control",
+								"name": "Cache-Control",
+								"value": "no-cache"
+							},
+							{
+								"key": "Postman-Token",
+								"name": "Postman-Token",
+								"value": "33e0ab3f-dd57-147e-7f09-1181ee61f87e"
+							}
+						],
+						"data": "{\n    \"name\" : \"new question\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					},
+					"requestObject": "{\"url\":\"http://localhost:8080/api/v1/post?group=my-new-group\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"name\":\"Content-Type\",\"enabled\":true},{\"key\":\"Cache-Control\",\"name\":\"Cache-Control\",\"value\":\"no-cache\"},{\"key\":\"Postman-Token\",\"name\":\"Postman-Token\",\"value\":\"33e0ab3f-dd57-147e-7f09-1181ee61f87e\"}],\"data\":\"{\\n    \\\"name\\\" : \\\"new question\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"id": "83cf805b-2d5d-0f46-c08f-dba5b3df803f",
+					"lastUpdatedBy": {
+						"id": "166393",
+						"username": "Jordan Jozwiak"
+					},
+					"createdAt": "2016-01-03T05:40:03.849Z",
+					"updatedAt": "2016-01-03T05:40:03.849Z",
+					"write": true
+				}
+			],
+			"rawModeData": "{\n    \"name\" : \"test7\"\n}"
+		}
+	]
+}
