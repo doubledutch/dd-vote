@@ -35,9 +35,8 @@ func (handler VoteHandler) GetUserVotes(c *gin.Context) {
 
 	userID := auth.GetUserIDFromCookie(c)
 	var votes []table.Vote
-	// TODO only get votes for specific group
 	if err := handler.db.Joins("left join posts on posts.id = votes.post_id").Where("posts.group_id = ? and votes.user_id = ?", group.ID, userID).Find(&votes).Error; err != nil {
-		// make empty slice
+		// return empty slice instead of nil for no data
 		votes = make([]table.Vote, 0)
 	}
 
