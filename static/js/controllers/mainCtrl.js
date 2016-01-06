@@ -73,7 +73,7 @@ angular.module('mainCtrl', ['ngRoute'])
 
             // only load vote data once
             if ($scope.votesLoading) {
-              Vote.getUserVotes()
+              Vote.getUserVotes(groupId)
                   .success(function(data) {
                       $scope.votesLoading = false;
                       for (var i in data.value) {

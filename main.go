@@ -82,7 +82,7 @@ func main() {
 			v1auth.POST("/group", gc.GetOrCreateGroup)
 			v1auth.POST("/comment", cc.CreateComment)
 			v1auth.POST("/vote", vc.CreateOrUpdateVote)
-			v1auth.GET("/user/votes", vc.GetUserVotes)
+			v1auth.GET("/user/votes/:gid", vc.GetUserVotes)
 			v1auth.GET("/export/all/:gid", ec.GetAllQuestionsCSV)
 		}
 	}

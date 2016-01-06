@@ -6,10 +6,10 @@ angular.module('voteService', [])
         return {
 
             // get all votes for the current user
-            getUserVotes : function() {
+            getUserVotes : function(group) {
                 return $http({
                     method: 'GET',
-                    url: '../../api/v1/user/votes'
+                    url: '../../api/v1/user/votes/' + group
                 });
             },
 

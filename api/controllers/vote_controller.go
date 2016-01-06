@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/jordanjoz/dd-vote/api/auth"
 	"github.com/jordanjoz/dd-vote/api/models/req"
 	"github.com/jordanjoz/dd-vote/api/models/resp"
 	"github.com/jordanjoz/dd-vote/api/models/table"
@@ -24,12 +25,18 @@ func NewVoteController(db gorm.DB) *VoteController {
 }
 
 // GetUserVotes gets the user's votes for a group
-func (cc VoteController) GetUserVotes(c *gin.Context) {
-	// TODO user helper method
-	userID := sessions.Default(c).Get("uid").(uint)
+func (vc VoteController) GetUserVotes(c *gin.Context) {
+	gid := c.Param("gid")
+	var group table.Group
+	if err := vc.db.Where("name = ?", gid).First(&group).Error; err != nil {
+		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
+		return
+	}
+
+	userID := auth.GetUserIDFromCookie(c)
 	var votes []table.Vote
 	// TODO only get votes for specific group
-	if err := cc.db.Where("user_id = ?", userID).Find(&votes).Error; err != nil {
+	if err := vc.db.Joins("left join posts on posts.id = votes.post_id").Where("posts.group_id = ? and votes.user_id = ?", group.ID, userID).Find(&votes).Error; err != nil {
 		// make empty slice
 		votes = make([]table.Vote, 0)
 	}
@@ -38,7 +45,7 @@ func (cc VoteController) GetUserVotes(c *gin.Context) {
 }
 
 // CreateOrUpdateVote create a new vote or update the user's existing one
-func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
+func (vc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	var voteReq req.VoteCreateRequest
 	if err := c.BindJSON(&voteReq); err != nil {
 		log.Printf("Unable request: %s", err)
@@ -48,7 +55,7 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 
 	// lookup post by uuid
 	var post table.Post
-	if err := cc.db.Where("uuid = ?", voteReq.PostUUID).First(&post).Error; err != nil {
+	if err := vc.db.Where("uuid = ?", voteReq.PostUUID).First(&post).Error; err != nil {
 		c.JSON(http.StatusOK, resp.APIResponse{IsError: true, Message: "Question does not exist"})
 		return
 	}
@@ -57,7 +64,7 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	userID := sessions.Default(c).Get("uid").(uint)
 
 	// start transaction
-	tx := cc.db.Begin()
+	tx := vc.db.Begin()
 
 	// attempt to get existing vote
 	var vote table.Vote
@@ -78,12 +85,12 @@ func (cc VoteController) CreateOrUpdateVote(c *gin.Context) {
 		if vote.Value == voteReq.Value {
 			c.JSON(http.StatusConflict, resp.APIResponse{IsError: true, Message: "Already voted that way"})
 			return
-		} else {
-			// changing vote
-			vote.Value = voteReq.Value
-			isChangingVote = true
-			tx.Save(&vote)
 		}
+
+		// changing vote
+		vote.Value = voteReq.Value
+		isChangingVote = true
+		tx.Save(&vote)
 	}
 
 	// update question's vote counts
