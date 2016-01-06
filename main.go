@@ -8,11 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/jordanjoz/dd-vote/api/auth"
-	"github.com/jordanjoz/dd-vote/api/controllers"
+	"github.com/jordanjoz/dd-vote/api/handlers"
+	"github.com/jordanjoz/dd-vote/controllers"
 
 	"github.com/jordanjoz/dd-vote/api/models/resp"
 	"github.com/jordanjoz/dd-vote/api/models/table"
-	"github.com/jordanjoz/dd-vote/viewcontrollers"
 
 	_ "github.com/lib/pq"
 )
@@ -33,18 +33,18 @@ func main() {
 	// run migrations
 	db.AutoMigrate(&table.Post{}, &table.Group{}, &table.User{}, &table.Vote{}, &table.Comment{}, &table.Permission{})
 
-	// get api controller instances
-	pc := controllers.NewPostController(db)
-	gc := controllers.NewGroupController(db)
-	cc := controllers.NewCommentController(db)
-	uc := controllers.NewUserController(db)
-	ac := controllers.NewAdminController(db)
-	vc := controllers.NewVoteController(db)
-	ec := controllers.NewExportController(db)
+	// get api handler instances
+	pc := handlers.NewPostController(db)
+	gc := handlers.NewGroupController(db)
+	cc := handlers.NewCommentController(db)
+	uc := handlers.NewUserController(db)
+	ac := handlers.NewAdminController(db)
+	vc := handlers.NewVoteController(db)
+	ec := handlers.NewExportController(db)
 
 	// get view controller instances
-	pvc := viewcontrollers.NewPageViewController(db)
-	avc := viewcontrollers.NewAdminViewController(db)
+	pvc := controllers.NewPageViewController(db)
+	avc := controllers.NewAdminViewController(db)
 
 	// init router
 	router := gin.Default()

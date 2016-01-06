@@ -1,4 +1,4 @@
-package viewcontrollers
+package controllers
 
 import (
 	"net/http"
