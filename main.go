@@ -61,8 +61,8 @@ func main() {
 	// view routes
 	views := router.Group("")
 	{
-		views.GET("/g/:gid", pvc.ShowGroupPage)
-		views.GET("/admin/:gid", avc.ShowAdminPage)
+		views.GET("/g/:gname", pvc.ShowGroupPage)
+		views.GET("/admin/:gname", avc.ShowAdminPage)
 	}
 
 	// v1 api calls
@@ -71,23 +71,23 @@ func main() {
 		// endpoints WITHOUT auth
 		v1.POST("/login", uc.LoginWithClientID)
 		v1.POST("/admin/login", ac.Login)
-		v1.GET("/post", pc.GetAllPostsForGroup)
+		v1.GET("/groups/:gname/posts", pc.GetAllPostsForGroup)
 
 		// api v1 calls WITH auth
 		v1auth := v1.Group("")
 		{
 			v1auth.Use(UseAuth)
 			v1auth.POST("/logout", uc.Logout)
-			v1auth.POST("/post", pc.CreatePost)
-			v1auth.POST("/group", gc.GetOrCreateGroup)
-			v1auth.POST("/comment", cc.CreateComment)
-			v1auth.POST("/vote", vc.CreateOrUpdateVote)
-			v1auth.GET("/user/votes/:gid", vc.GetUserVotes)
-			v1auth.GET("/export/all/:gid", ec.GetAllQuestionsCSV)
+			v1auth.POST("/groups/:gname/posts", pc.CreatePost)
+			v1auth.POST("/groups", gc.GetOrCreateGroup)
+			v1auth.POST("/posts/:puuid/comments", cc.CreateComment)
+			v1auth.POST("/posts/:puuid/votes", vc.CreateOrUpdateVote)
+			v1auth.GET("/groups/:gname/votes/user", vc.GetUserVotes)
+			v1auth.GET("/groups/:gname/export/all", ec.GetAllQuestionsCSV)
 		}
 	}
 
-	router.Run(":8080")
+	router.Run(":8081")
 }
 
 // UseAuth rejects unauthorized api requests

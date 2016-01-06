@@ -26,9 +26,9 @@ func NewVoteController(db gorm.DB) *VoteController {
 
 // GetUserVotes gets the user's votes for a group
 func (vc VoteController) GetUserVotes(c *gin.Context) {
-	gid := c.Param("gid")
+	gname := c.Param("gname")
 	var group table.Group
-	if err := vc.db.Where("name = ?", gid).First(&group).Error; err != nil {
+	if err := vc.db.Where("name = ?", gname).First(&group).Error; err != nil {
 		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
@@ -46,6 +46,7 @@ func (vc VoteController) GetUserVotes(c *gin.Context) {
 
 // CreateOrUpdateVote create a new vote or update the user's existing one
 func (vc VoteController) CreateOrUpdateVote(c *gin.Context) {
+	puuid := c.Param("puuid")
 	var voteReq req.VoteCreateRequest
 	if err := c.BindJSON(&voteReq); err != nil {
 		log.Printf("Unable request: %s", err)
@@ -55,7 +56,7 @@ func (vc VoteController) CreateOrUpdateVote(c *gin.Context) {
 
 	// lookup post by uuid
 	var post table.Post
-	if err := vc.db.Where("uuid = ?", voteReq.PostUUID).First(&post).Error; err != nil {
+	if err := vc.db.Where("uuid = ?", puuid).First(&post).Error; err != nil {
 		c.JSON(http.StatusOK, resp.APIResponse{IsError: true, Message: "Question does not exist"})
 		return
 	}

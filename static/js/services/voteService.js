@@ -6,18 +6,18 @@ angular.module('voteService', [])
         return {
 
             // get all votes for the current user
-            getUserVotes : function(group) {
+            getUserVotes : function(group_name) {
                 return $http({
                     method: 'GET',
-                    url: '../../api/v1/user/votes/' + group
+                    url: '../../api/v1/groups/' + group_name + '/votes/user'
                 });
             },
 
             // save a vote
-            save : function(voteData) {
+            save : function(post_id, voteData) {
                 return $http({
                     method: 'POST',
-                    url: '../../api/v1/vote',
+                    url: '../../api/v1/posts/' + post_id + '/votes',
                     headers: { 'Content-Type' : 'application/json' },
                     data: voteData
                 });

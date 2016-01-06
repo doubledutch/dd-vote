@@ -24,9 +24,9 @@ func NewPageViewController(db gorm.DB) *PageViewController {
 // api requests for loading the appropriate data
 func (gc PageViewController) ShowGroupPage(c *gin.Context) {
 	// create new group if it does not exist
-	gid := c.Param("gid")
+	gname := c.Param("gname")
 	var group table.Group
-	gc.db.FirstOrCreate(&group, table.Group{Name: gid})
+	gc.db.FirstOrCreate(&group, table.Group{Name: gname})
 
 	// show view
 	http.ServeFile(c.Writer, c.Request, "views/group_page.html")

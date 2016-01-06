@@ -8,10 +8,9 @@ angular.module('commentService', [])
             save: function (snackId, commentData) {
                 return $http({
                     method: 'POST',
-                    url: '../../api/v1/comment',
+                    url: '../../api/v1/posts/' + snackId + '/comments',
                     headers: {'Content-Type': 'application/json'},
-                    data: commentData,
-                    params: {post: snackId}
+                    data: commentData
                 });
             }
         }

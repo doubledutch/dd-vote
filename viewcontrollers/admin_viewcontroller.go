@@ -22,8 +22,8 @@ func NewAdminViewController(db gorm.DB) *AdminViewController {
 // ShowAdminPage either shows the login page or the admin panel, depending
 // on whether the user is logged in and has access to the group
 func (gc AdminViewController) ShowAdminPage(c *gin.Context) {
-	groupUUID := c.Param("gid")
-	if auth.IsLoggedIn(c) && auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), groupUUID, gc.db) {
+	gname := c.Param("gname")
+	if auth.IsLoggedIn(c) && auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, gc.db) {
 		// user has admin access
 		http.ServeFile(c.Writer, c.Request, "views/admin_panel.html")
 	} else {

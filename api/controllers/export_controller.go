@@ -24,21 +24,21 @@ func NewExportController(db gorm.DB) *ExportController {
 
 // GetAllQuestionsCSV serves a csv files report of all the questions in a group
 func (ec ExportController) GetAllQuestionsCSV(c *gin.Context) {
-	groupUUID := c.Param("gid")
-	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), groupUUID, ec.db) {
+	gname := c.Param("gname")
+	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, ec.db) {
 		c.JSON(http.StatusForbidden, resp.APIResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}
 
 	var group table.Group
-	if err := ec.db.Where("name = ?", groupUUID).First(&group).Error; err != nil {
+	if err := ec.db.Where("name = ?", gname).First(&group).Error; err != nil {
 		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 
 	// get all posts for a group with comments and users for those comments
 	var posts []table.Post
-	ec.db.First(&group, table.Group{Name: groupUUID})
+	ec.db.First(&group, table.Group{Name: gname})
 	ec.db.Model(&group).Order("id").Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
 
 	output := "Question,Upvotes,Downvotes,Created by" + "\n"
@@ -48,7 +48,7 @@ func (ec ExportController) GetAllQuestionsCSV(c *gin.Context) {
 		output += strings.Join(data[:], ",") + "\n"
 	}
 
-	c.Writer.Header().Set("Content-Disposition", "attachment; filename=top.csv")
+	c.Writer.Header().Set("Content-Disposition", "attachment; filename=questions.csv")
 	c.Writer.Header().Set("Content-Type", c.Request.Header.Get("Content-Type"))
 
 	c.String(http.StatusOK, output)

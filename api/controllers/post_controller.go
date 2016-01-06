@@ -25,7 +25,7 @@ func NewPostController(db gorm.DB) *PostController {
 // GetAllPostsForGroup returns all the questions in a group with nested
 // data for their comments on the users on those comments
 func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
-	groupname := c.Query("group")
+	groupname := c.Param("gname")
 	var group table.Group
 	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
 		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
@@ -50,7 +50,7 @@ func (pc PostController) GetAllPostsForGroup(c *gin.Context) {
 // CreatePost creates a new question
 func (pc PostController) CreatePost(c *gin.Context) {
 	// lookup group by name
-	groupname := c.Query("group")
+	groupname := c.Param("gname")
 	var group table.Group
 	if err := pc.db.Where("name = ?", groupname).First(&group).Error; err != nil {
 		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})

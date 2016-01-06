@@ -24,7 +24,7 @@ func NewCommentController(db gorm.DB) *CommentController {
 // CreateComment creates a new comment on a post
 func (cc CommentController) CreateComment(c *gin.Context) {
 	// lookup post by uuid
-	postUUID := c.Query("post")
+	postUUID := c.Param("puuid")
 	var post table.Post
 	if err := cc.db.Where("uuid = ?", postUUID).First(&post).Error; err != nil {
 		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Question does not exist"})

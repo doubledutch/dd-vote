@@ -205,7 +205,7 @@ angular.module('mainCtrl', ['ngRoute'])
                 }
             }
 
-            Vote.save({post_id: snackId, value: value})
+            Vote.save(snackId, {value: value})
                 .success(function(data) {
                     // do nothing
                 })
