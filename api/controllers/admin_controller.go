@@ -37,6 +37,7 @@ func (ac AdminController) Login(c *gin.Context) {
 	user := userReq.ToUser()
 
 	// lookup user in db
+	// TODO user passwords should be hashed
 	if err := ac.db.First(&user, table.User{Email: user.Email, Password: user.Password}).Error; err != nil {
 		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Email or password is incorrect"})
 		return
