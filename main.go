@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/jordanjoz/dd-vote/api/auth"
 	"github.com/jordanjoz/dd-vote/api/controllers"
 
 	"github.com/jordanjoz/dd-vote/api/models/resp"
 	"github.com/jordanjoz/dd-vote/api/models/table"
-	"github.com/jordanjoz/dd-vote/api/user"
 	"github.com/jordanjoz/dd-vote/viewcontrollers"
 
 	_ "github.com/lib/pq"
@@ -90,7 +90,7 @@ func main() {
 }
 
 func UseAuth(c *gin.Context) {
-	if !user.IsLoggedIn(c) {
+	if !auth.IsLoggedIn(c) {
 		c.JSON(401, resp.ApiResponse{IsError: false, Message: "User is not logged in"})
 		c.Abort()
 	}

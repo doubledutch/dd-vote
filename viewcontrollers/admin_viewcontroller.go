@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/jinzhu/gorm"
-	"github.com/jordanjoz/dd-vote/api/user"
+	"github.com/jordanjoz/dd-vote/api/auth"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +19,7 @@ func NewAdminViewController(db gorm.DB) *AdminViewController {
 
 func (gc AdminViewController) ShowAdminPage(c *gin.Context) {
 	groupUUID := c.Param("gid")
-	if user.IsLoggedIn(c) && user.HasAccessToGroup(user.GetUserIDFromCookie(c), groupUUID, gc.db) {
+	if auth.IsLoggedIn(c) && auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), groupUUID, gc.db) {
 		// user has admin access
 		http.ServeFile(c.Writer, c.Request, "views/admin_panel.html")
 	} else {

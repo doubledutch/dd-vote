@@ -7,10 +7,10 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/jordanjoz/dd-vote/api/auth"
 	"github.com/jordanjoz/dd-vote/api/models/req"
 	"github.com/jordanjoz/dd-vote/api/models/resp"
 	"github.com/jordanjoz/dd-vote/api/models/table"
-	userHelper "github.com/jordanjoz/dd-vote/api/user"
 )
 
 type AdminController struct {
@@ -39,7 +39,7 @@ func (ac AdminController) Login(c *gin.Context) {
 		return
 	}
 
-	if !userHelper.HasAccessToGroup(user.ID, userReq.GroupUUID, ac.db) {
+	if !auth.HasAccessToGroup(user.ID, userReq.GroupUUID, ac.db) {
 		c.JSON(200, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}

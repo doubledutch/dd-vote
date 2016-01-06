@@ -7,9 +7,9 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jordanjoz/dd-vote/api/auth"
 	"github.com/jordanjoz/dd-vote/api/models/resp"
 	"github.com/jordanjoz/dd-vote/api/models/table"
-	"github.com/jordanjoz/dd-vote/api/user"
 )
 
 type ExportController struct {
@@ -22,7 +22,7 @@ func NewExportController(db gorm.DB) *ExportController {
 
 func (ec ExportController) GetAllQuestionsCSV(c *gin.Context) {
 	groupUUID := c.Param("gid")
-	if !user.HasAccessToGroup(user.GetUserIDFromCookie(c), groupUUID, ec.db) {
+	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), groupUUID, ec.db) {
 		c.JSON(200, resp.ApiResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}

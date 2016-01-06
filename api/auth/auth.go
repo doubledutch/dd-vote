@@ -1,4 +1,4 @@
-package user
+package auth
 
 import (
 	"github.com/gin-gonic/contrib/sessions"
