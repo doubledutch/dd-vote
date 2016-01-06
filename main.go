@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -20,7 +22,7 @@ import (
 func main() {
 
 	// connect to db
-	db, err := gorm.Open("postgres", "password=mysecretpassword host=localhost port=5432 sslmode=disable")
+	db, err := gorm.Open("postgres", getPostgresConn())
 	if err != nil {
 		log.Fatal("Unable to open database:", err.Error())
 	}
@@ -88,6 +90,36 @@ func main() {
 	}
 
 	router.Run(":8081")
+}
+
+func getPostgresConn() string {
+	conn := os.Getenv("DB_CONN")
+	if conn != "" {
+		return conn
+	}
+
+	host := os.Getenv("POSTGRES_ADDR")
+	if host == "" {
+		host = os.Getenv("DDVOTE_DB_PORT_5432_TCP_ADDR")
+	}
+	port := os.Getenv("POSTGRES_PORT")
+	if port == "" {
+		port = os.Getenv("DDVOTE_DB_PORT_5432_TCP_PORT")
+	}
+	username := os.Getenv("POSTGRES_USERNAME")
+	database := os.Getenv("POSTGRES_DATABASE")
+
+	conn = fmt.Sprintf("host=%s port=%s user=%s dbname=%s ",
+		host, port, username, database)
+
+	password := os.Getenv("POSTGRES_PASSWORD")
+	if password != "" {
+		conn += fmt.Sprintf(" password=%s", password)
+	}
+
+	// Assume ssl is disabled for now
+	conn += " sslmode=disable"
+	return conn
 }
 
 // UseAuth rejects unauthorized api requests

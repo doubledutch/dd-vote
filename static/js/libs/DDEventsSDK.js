@@ -51,7 +51,7 @@
 
       /// Get Current User
       /// The implementation is set by the hosting native application
-      getCurrentUserImplementation: function() { this.getCurrentUserCallback({ UserId: 2, EmailAddress: '', FirstName: 'Jordan', LastName: 'Joz'})},
+      getCurrentUserImplementation: throwNotInitialized,
       _getCurrentUserQueue: new CallbackQueue(),
       /// This async method is called by JS clients
       getCurrentUserAsync: function (callback) {
@@ -103,7 +103,7 @@
   };
 
   var initCheck = setInterval(function () {
-    if (DD.Events.getSignedAPIImplementation === throwNotInitialized) {
+    if (DD.Events.getSignedAPIImplementation !== throwNotInitialized) {
       clearInterval(initCheck);
       var cbs = onReadyCallbacks;
       onReadyCallbacks = null;
