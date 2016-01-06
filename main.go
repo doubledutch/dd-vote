@@ -34,17 +34,17 @@ func main() {
 	db.AutoMigrate(&table.Post{}, &table.Group{}, &table.User{}, &table.Vote{}, &table.Comment{}, &table.Permission{})
 
 	// get api handler instances
-	pc := handlers.NewPostController(db)
-	gc := handlers.NewGroupController(db)
-	cc := handlers.NewCommentController(db)
-	uc := handlers.NewUserController(db)
-	ac := handlers.NewAdminController(db)
-	vc := handlers.NewVoteController(db)
-	ec := handlers.NewExportController(db)
+	ph := handlers.NewPostHandler(db)
+	gh := handlers.NewGroupHandler(db)
+	ch := handlers.NewCommentHandler(db)
+	uh := handlers.NewUserHandler(db)
+	ah := handlers.NewAdminHandler(db)
+	vh := handlers.NewVoteHandler(db)
+	eh := handlers.NewExportHandler(db)
 
 	// get view controller instances
-	pvc := controllers.NewPageViewController(db)
-	avc := controllers.NewAdminViewController(db)
+	pvc := controllers.NewPageController(db)
+	avc := controllers.NewAdminController(db)
 
 	// init router
 	router := gin.Default()
@@ -69,21 +69,21 @@ func main() {
 	v1 := router.Group("api/v1")
 	{
 		// endpoints WITHOUT auth
-		v1.POST("/login", uc.LoginWithClientID)
-		v1.POST("/admin/login", ac.Login)
-		v1.GET("/groups/:gname/posts", pc.GetAllPostsForGroup)
+		v1.POST("/login", uh.LoginWithClientID)
+		v1.POST("/admin/login", ah.Login)
+		v1.GET("/groups/:gname/posts", ph.GetAllPostsForGroup)
 
 		// api v1 calls WITH auth
 		v1auth := v1.Group("")
 		{
 			v1auth.Use(UseAuth)
-			v1auth.POST("/logout", uc.Logout)
-			v1auth.POST("/groups/:gname/posts", pc.CreatePost)
-			v1auth.POST("/groups", gc.GetOrCreateGroup)
-			v1auth.POST("/posts/:puuid/comments", cc.CreateComment)
-			v1auth.POST("/posts/:puuid/votes", vc.CreateOrUpdateVote)
-			v1auth.GET("/groups/:gname/votes/user", vc.GetUserVotes)
-			v1auth.GET("/groups/:gname/export/all", ec.GetAllQuestionsCSV)
+			v1auth.POST("/logout", uh.Logout)
+			v1auth.POST("/groups/:gname/posts", ph.CreatePost)
+			v1auth.POST("/groups", gh.GetOrCreateGroup)
+			v1auth.POST("/posts/:puuid/comments", ch.CreateComment)
+			v1auth.POST("/posts/:puuid/votes", vh.CreateOrUpdateVote)
+			v1auth.GET("/groups/:gname/votes/user", vh.GetUserVotes)
+			v1auth.GET("/groups/:gname/export/all", eh.GetAllQuestionsCSV)
 		}
 	}
 

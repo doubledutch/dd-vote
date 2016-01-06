@@ -14,18 +14,18 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-// AdminController manages api endpoints for admins
-type AdminController struct {
+// AdminHandler manages api endpoints for admins
+type AdminHandler struct {
 	db gorm.DB
 }
 
-// NewAdminController creates a new instance
-func NewAdminController(db gorm.DB) *AdminController {
-	return &AdminController{db: db}
+// NewAdminHandler creates a new instance
+func NewAdminHandler(db gorm.DB) *AdminHandler {
+	return &AdminHandler{db: db}
 }
 
 // Login attempts to log an admin in
-func (ac AdminController) Login(c *gin.Context) {
+func (handler AdminHandler) Login(c *gin.Context) {
 	var userReq req.AdminLoginRequest
 	if err := c.BindJSON(&userReq); err != nil {
 		log.Printf("Unable to parse user: %s", err)
@@ -38,12 +38,12 @@ func (ac AdminController) Login(c *gin.Context) {
 
 	// lookup user in db
 	// TODO user passwords should be hashed
-	if err := ac.db.First(&user, table.User{Email: user.Email, Password: user.Password}).Error; err != nil {
+	if err := handler.db.First(&user, table.User{Email: user.Email, Password: user.Password}).Error; err != nil {
 		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Email or password is incorrect"})
 		return
 	}
 
-	if !auth.HasAccessToGroup(user.ID, userReq.GroupUUID, ac.db) {
+	if !auth.HasAccessToGroup(user.ID, userReq.GroupUUID, handler.db) {
 		c.JSON(http.StatusForbidden, resp.APIResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}

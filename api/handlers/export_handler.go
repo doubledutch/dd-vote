@@ -12,34 +12,34 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-// ExportController manages api endpoints for exporting reports
-type ExportController struct {
+// ExportHandler manages api endpoints for exporting reports
+type ExportHandler struct {
 	db gorm.DB
 }
 
-// NewExportController creates a new instance
-func NewExportController(db gorm.DB) *ExportController {
-	return &ExportController{db: db}
+// NewExportHandler creates a new instance
+func NewExportHandler(db gorm.DB) *ExportHandler {
+	return &ExportHandler{db: db}
 }
 
 // GetAllQuestionsCSV serves a csv files report of all the questions in a group
-func (ec ExportController) GetAllQuestionsCSV(c *gin.Context) {
+func (handler ExportHandler) GetAllQuestionsCSV(c *gin.Context) {
 	gname := c.Param("gname")
-	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, ec.db) {
+	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, handler.db) {
 		c.JSON(http.StatusForbidden, resp.APIResponse{IsError: true, Message: "You don't have permission to access this group"})
 		return
 	}
 
 	var group table.Group
-	if err := ec.db.Where("name = ?", gname).First(&group).Error; err != nil {
+	if err := handler.db.Where("name = ?", gname).First(&group).Error; err != nil {
 		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
 
 	// get all posts for a group with comments and users for those comments
 	var posts []table.Post
-	ec.db.First(&group, table.Group{Name: gname})
-	ec.db.Model(&group).Order("id").Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
+	handler.db.First(&group, table.Group{Name: gname})
+	handler.db.Model(&group).Order("id").Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
 
 	output := "Question,Upvotes,Downvotes,Created by" + "\n"
 	for _, post := range posts {

@@ -13,19 +13,19 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-// UserController manages api endpoints for users
-type UserController struct {
+// UserHandler manages api endpoints for users
+type UserHandler struct {
 	db gorm.DB
 }
 
-// NewUserController creates a new instance
-func NewUserController(db gorm.DB) *UserController {
-	return &UserController{db: db}
+// NewUserHandler creates a new instance
+func NewUserHandler(db gorm.DB) *UserHandler {
+	return &UserHandler{db: db}
 }
 
 // LoginWithClientID logs a user in using the data from the client, which
 // gives them permission to post a question, comment, and vote in a group
-func (uc UserController) LoginWithClientID(c *gin.Context) {
+func (handler UserHandler) LoginWithClientID(c *gin.Context) {
 	// deserialize post
 	var userReq req.UserRequest
 	if err := c.BindJSON(&userReq); err != nil {
@@ -38,7 +38,7 @@ func (uc UserController) LoginWithClientID(c *gin.Context) {
 	user := userReq.ToUser()
 
 	// create or get user from db
-	if err := uc.db.FirstOrCreate(&user, table.User{ClientID: user.ClientID}).Error; err != nil {
+	if err := handler.db.FirstOrCreate(&user, table.User{ClientID: user.ClientID}).Error; err != nil {
 		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Error logging in"})
 		return
 	}
@@ -50,7 +50,7 @@ func (uc UserController) LoginWithClientID(c *gin.Context) {
 }
 
 // Logout logs a user out
-func (uc UserController) Logout(c *gin.Context) {
+func (handler UserHandler) Logout(c *gin.Context) {
 	auth.ClearUserIDFromCookie(c)
 	c.JSON(http.StatusOK, resp.APIResponse{IsError: false, Message: "User logged out"})
 }

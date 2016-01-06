@@ -14,21 +14,21 @@ import (
 	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
-// VoteController manages api endpoints for voting
-type VoteController struct {
+// VoteHandler manages api endpoints for voting
+type VoteHandler struct {
 	db gorm.DB
 }
 
-// NewVoteController creates a new instance
-func NewVoteController(db gorm.DB) *VoteController {
-	return &VoteController{db: db}
+// NewVoteHandler creates a new instance
+func NewVoteHandler(db gorm.DB) *VoteHandler {
+	return &VoteHandler{db: db}
 }
 
 // GetUserVotes gets the user's votes for a group
-func (vc VoteController) GetUserVotes(c *gin.Context) {
+func (handler VoteHandler) GetUserVotes(c *gin.Context) {
 	gname := c.Param("gname")
 	var group table.Group
-	if err := vc.db.Where("name = ?", gname).First(&group).Error; err != nil {
+	if err := handler.db.Where("name = ?", gname).First(&group).Error; err != nil {
 		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
 		return
 	}
@@ -36,7 +36,7 @@ func (vc VoteController) GetUserVotes(c *gin.Context) {
 	userID := auth.GetUserIDFromCookie(c)
 	var votes []table.Vote
 	// TODO only get votes for specific group
-	if err := vc.db.Joins("left join posts on posts.id = votes.post_id").Where("posts.group_id = ? and votes.user_id = ?", group.ID, userID).Find(&votes).Error; err != nil {
+	if err := handler.db.Joins("left join posts on posts.id = votes.post_id").Where("posts.group_id = ? and votes.user_id = ?", group.ID, userID).Find(&votes).Error; err != nil {
 		// make empty slice
 		votes = make([]table.Vote, 0)
 	}
@@ -45,7 +45,7 @@ func (vc VoteController) GetUserVotes(c *gin.Context) {
 }
 
 // CreateOrUpdateVote create a new vote or update the user's existing one
-func (vc VoteController) CreateOrUpdateVote(c *gin.Context) {
+func (handler VoteHandler) CreateOrUpdateVote(c *gin.Context) {
 	puuid := c.Param("puuid")
 	var voteReq req.VoteCreateRequest
 	if err := c.BindJSON(&voteReq); err != nil {
@@ -56,7 +56,7 @@ func (vc VoteController) CreateOrUpdateVote(c *gin.Context) {
 
 	// lookup post by uuid
 	var post table.Post
-	if err := vc.db.Where("uuid = ?", puuid).First(&post).Error; err != nil {
+	if err := handler.db.Where("uuid = ?", puuid).First(&post).Error; err != nil {
 		c.JSON(http.StatusOK, resp.APIResponse{IsError: true, Message: "Question does not exist"})
 		return
 	}
@@ -65,7 +65,7 @@ func (vc VoteController) CreateOrUpdateVote(c *gin.Context) {
 	userID := sessions.Default(c).Get("uid").(uint)
 
 	// start transaction
-	tx := vc.db.Begin()
+	tx := handler.db.Begin()
 
 	// attempt to get existing vote
 	var vote table.Vote

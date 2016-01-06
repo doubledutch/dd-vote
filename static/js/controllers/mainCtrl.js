@@ -170,7 +170,7 @@ angular.module('mainCtrl', ['ngRoute'])
         }
     })
     // inject the Vote service into our controller
-    .controller('voteController', function($scope, $http, Vote) {
+    .controller('VoteHandler', function($scope, $http, Vote) {
 
         $scope.vote = function(snackId, value) {
 
@@ -217,12 +217,12 @@ angular.module('mainCtrl', ['ngRoute'])
     })
 
     // inject the Group service into our controller
-    .controller('groupController', function($scope, $http, $location, Group) {
+    .controller('GroupHandler', function($scope, $http, $location, Group) {
         // make architecture better
     })
 
     // inject the comment service into our controller
-    .controller('commentController', function($scope, $http, Comment) {
+    .controller('CommentHandler', function($scope, $http, Comment) {
 
         $scope.submitComment = function (snackId) {
 

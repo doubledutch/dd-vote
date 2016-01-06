@@ -9,19 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AdminViewController manages browser requests for admin pages
-type AdminViewController struct {
+// AdminController manages browser requests for admin pages
+type AdminController struct {
 	db gorm.DB
 }
 
-// NewAdminViewController creates a new instance
-func NewAdminViewController(db gorm.DB) *AdminViewController {
-	return &AdminViewController{db: db}
+// NewAdminController creates a new instance
+func NewAdminController(db gorm.DB) *AdminController {
+	return &AdminController{db: db}
 }
 
 // ShowAdminPage either shows the login page or the admin panel, depending
 // on whether the user is logged in and has access to the group
-func (gc AdminViewController) ShowAdminPage(c *gin.Context) {
+func (gc AdminController) ShowAdminPage(c *gin.Context) {
 	gname := c.Param("gname")
 	if auth.IsLoggedIn(c) && auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, gc.db) {
 		// user has admin access
