@@ -6,7 +6,6 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jordanjoz/dd-vote/api/auth"
 	"github.com/jordanjoz/dd-vote/api/models/req"
@@ -49,9 +48,7 @@ func (handler AdminHandler) Login(c *gin.Context) {
 	}
 
 	// set user logged in
-	session := sessions.Default(c)
-	session.Set("uid", user.ID)
-	session.Save()
+	auth.StoreUserIDInCookie(c, user.ID)
 
 	c.JSON(http.StatusOK, resp.APIResponse{IsError: false, Value: user})
 }
