@@ -1,6 +1,6 @@
 package req
 
-import "github.com/jordanjoz/dd-vote/api/models/table"
+import "github.com/doubledutch/dd-vote/api/models/table"
 
 // UserRequest is sent by the client when logging in
 type UserRequest struct {

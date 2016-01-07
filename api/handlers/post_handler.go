@@ -6,10 +6,10 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 
+	"github.com/doubledutch/dd-vote/api/models/resp"
+	"github.com/doubledutch/dd-vote/api/models/table"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/jordanjoz/dd-vote/api/models/resp"
-	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
 // PostHandler manages api endpoints for posts (questions)

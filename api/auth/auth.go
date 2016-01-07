@@ -1,10 +1,10 @@
 package auth
 
 import (
+	"github.com/doubledutch/dd-vote/api/models/table"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
 // User roles

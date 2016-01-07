@@ -5,7 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	"github.com/jordanjoz/dd-vote/api/models/table"
+	"github.com/doubledutch/dd-vote/api/models/table"
 
 	"github.com/gin-gonic/gin"
 )

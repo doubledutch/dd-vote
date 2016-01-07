@@ -6,10 +6,10 @@ import (
 
 	"github.com/jinzhu/gorm"
 
+	"github.com/doubledutch/dd-vote/api/auth"
+	"github.com/doubledutch/dd-vote/api/models/resp"
+	"github.com/doubledutch/dd-vote/api/models/table"
 	"github.com/gin-gonic/gin"
-	"github.com/jordanjoz/dd-vote/api/auth"
-	"github.com/jordanjoz/dd-vote/api/models/resp"
-	"github.com/jordanjoz/dd-vote/api/models/table"
 )
 
 // ExportHandler manages api endpoints for exporting reports

@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/doubledutch/dd-vote/api/auth"
 	"github.com/jinzhu/gorm"
-	"github.com/jordanjoz/dd-vote/api/auth"
 
 	"github.com/gin-gonic/gin"
 )
