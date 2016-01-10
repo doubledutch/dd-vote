@@ -25,7 +25,7 @@ func NewExportHandler(db gorm.DB) *ExportHandler {
 }
 
 // GetAllQuestionsCSV serves a csv file report of all the questions in a group
-// Columns: Question, Upvotes, Downvotes, Created by
+// Columns: Question, Score (upvotes - downvotes), Total votes (upvotes + downvotes), Upvotes, Downvotes, Created by
 func (handler ExportHandler) GetAllQuestionsCSV(c *gin.Context) {
 	gname := c.Param("gname")
 	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, handler.db) {
@@ -43,9 +43,9 @@ func (handler ExportHandler) GetAllQuestionsCSV(c *gin.Context) {
 	var posts []table.Post
 	handler.db.First(&group, table.Group{Name: gname})
 	handler.db.Model(&group).Order("id").Preload("User").Association("Posts").Find(&posts)
-	output := "Question,Upvotes,Downvotes,Created by" + "\n"
+	output := "Question,Score (upvotes - downvotes),Total votes (upvotes + downvotes),Upvotes,Downvotes,Created by" + "\n"
 	for _, post := range posts {
-		data := []string{post.Name, fmt.Sprintf("%v", post.Upvotes), fmt.Sprintf("%v", post.Downvotes), fmt.Sprintf("%v", post.User.FullName())}
+		data := []string{post.Name, fmt.Sprintf("%v", int(post.Upvotes)-int(post.Downvotes)), fmt.Sprintf("%v", post.Upvotes+post.Downvotes), fmt.Sprintf("%v", post.Upvotes), fmt.Sprintf("%v", post.Downvotes), fmt.Sprintf("%v", post.User.FullName())}
 		for i := range data {
 			data[i] = escapeForCSV(data[i])
 		}
