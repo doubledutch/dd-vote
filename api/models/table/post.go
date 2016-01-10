@@ -14,4 +14,5 @@ type Post struct {
 
 	// associations
 	Comments []Comment `json:"comments"`
+	User     User      `json:"-" gorm:"ForeignKey:CreatedBy"`
 }

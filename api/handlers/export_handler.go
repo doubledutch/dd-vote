@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -39,12 +40,13 @@ func (handler ExportHandler) GetAllQuestionsCSV(c *gin.Context) {
 	// get all posts for a group with comments and users for those comments
 	var posts []table.Post
 	handler.db.First(&group, table.Group{Name: gname})
-	handler.db.Model(&group).Order("id").Preload("Comments").Preload("Comments.User").Association("Posts").Find(&posts)
-
+	handler.db.Model(&group).Order("id").Preload("User").Association("Posts").Find(&posts)
 	output := "Question,Upvotes,Downvotes,Created by" + "\n"
 	for _, post := range posts {
-		data := []string{post.Name, "strconv.FormatUint(post.Upvotes, 10)", "strconv.FormatUint(post.Downvotes, 10)", "strconv.FormatUint(post.CreatedBy, 16)"}
-		//TODO function for escaping commas, quotes, and new lines
+		data := []string{post.Name, fmt.Sprintf("%v", post.Upvotes), fmt.Sprintf("%v", post.Downvotes), fmt.Sprintf("%v", post.User.FullName())}
+		for i := range data {
+			data[i] = escapeForCSV(data[i])
+		}
 		output += strings.Join(data[:], ",") + "\n"
 	}
 
@@ -52,4 +54,12 @@ func (handler ExportHandler) GetAllQuestionsCSV(c *gin.Context) {
 	c.Writer.Header().Set("Content-Type", c.Request.Header.Get("Content-Type"))
 
 	c.String(http.StatusOK, output)
+}
+
+func escapeForCSV(data string) string {
+	if strings.ContainsAny(data, "\",") {
+		data = strings.Replace(data, "\"", "\"\"", -1)
+		return "\"" + data + "\""
+	}
+	return data
 }

@@ -12,3 +12,8 @@ type User struct {
 	Password string `json:"-"`
 	ClientID uint   `json:"-" sql:"unique_index" `
 }
+
+// FullName gets the full name for a user
+func (user *User) FullName() string {
+	return user.Firstname + " " + user.Lastname
+}
