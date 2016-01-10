@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/jinzhu/gorm"
+	"github.com/jordanjoz/dd-vote/api/auth"
 
 	"github.com/doubledutch/dd-vote/api/models/resp"
 	"github.com/doubledutch/dd-vote/api/models/table"
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,7 +39,7 @@ func (handler CommentHandler) CreateComment(c *gin.Context) {
 		return
 	}
 	comment.PostID = post.ID
-	comment.UserID = sessions.Default(c).Get("uid").(uint)
+	comment.UserID = auth.GetUserIDFromCookie(c)
 
 	// create new comment
 	if err := handler.db.Create(&comment).Error; err != nil {

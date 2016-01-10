@@ -10,7 +10,6 @@ import (
 	"github.com/doubledutch/dd-vote/api/models/req"
 	"github.com/doubledutch/dd-vote/api/models/resp"
 	"github.com/doubledutch/dd-vote/api/models/table"
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -65,7 +64,7 @@ func (handler VoteHandler) CreateOrUpdateVote(c *gin.Context) {
 	}
 
 	// get current user id
-	userID := sessions.Default(c).Get("uid").(uint)
+	userID := auth.GetUserIDFromCookie(c)
 
 	// start transaction
 	tx := handler.db.Begin()

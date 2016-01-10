@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/jinzhu/gorm"
+	"github.com/jordanjoz/dd-vote/api/auth"
 	"github.com/satori/go.uuid"
 
 	"github.com/doubledutch/dd-vote/api/models/resp"
 	"github.com/doubledutch/dd-vote/api/models/table"
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -66,7 +66,7 @@ func (handler PostHandler) CreatePost(c *gin.Context) {
 	}
 	post.GroupID = group.ID
 	post.UUID = uuid.NewV4().String() //TODO make sure this doesn't break everything
-	post.CreatedBy = sessions.Default(c).Get("uid").(uint)
+	post.CreatedBy = auth.GetUserIDFromCookie(c)
 
 	// create new question
 	if err := handler.db.Create(&post).Error; err != nil {
