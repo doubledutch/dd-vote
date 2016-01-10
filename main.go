@@ -86,6 +86,7 @@ func main() {
 			v1auth.POST("/posts/:puuid/votes", vh.CreateOrUpdateVote)
 			v1auth.GET("/groups/:gname/votes/user", vh.GetUserVotes)
 			v1auth.GET("/groups/:gname/export/all", eh.GetAllQuestionsCSV)
+			v1auth.GET("/groups/:gname/export/top", eh.GetTopUsersCSV)
 		}
 	}
 

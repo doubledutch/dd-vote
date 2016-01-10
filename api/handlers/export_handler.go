@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -23,7 +24,8 @@ func NewExportHandler(db gorm.DB) *ExportHandler {
 	return &ExportHandler{db: db}
 }
 
-// GetAllQuestionsCSV serves a csv files report of all the questions in a group
+// GetAllQuestionsCSV serves a csv file report of all the questions in a group
+// Columns: Question, Upvotes, Downvotes, Created by
 func (handler ExportHandler) GetAllQuestionsCSV(c *gin.Context) {
 	gname := c.Param("gname")
 	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, handler.db) {
@@ -51,6 +53,47 @@ func (handler ExportHandler) GetAllQuestionsCSV(c *gin.Context) {
 	}
 
 	c.Writer.Header().Set("Content-Disposition", "attachment; filename=questions.csv")
+	c.Writer.Header().Set("Content-Type", c.Request.Header.Get("Content-Type"))
+
+	c.String(http.StatusOK, output)
+}
+
+// GetTopUsersCSV serves a csv file report of users with the most votes
+// Columns: Name, Total votes
+func (handler ExportHandler) GetTopUsersCSV(c *gin.Context) {
+	gname := c.Param("gname")
+	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), gname, handler.db) {
+		c.JSON(http.StatusForbidden, resp.APIResponse{IsError: true, Message: "You don't have permission to access this group"})
+		return
+	}
+
+	var group table.Group
+	if err := handler.db.Where("name = ?", gname).First(&group).Error; err != nil {
+		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Group does not exist"})
+		return
+	}
+
+	handler.db.First(&group, table.Group{Name: gname})
+	rows, err := handler.db.Table("users").Select("users.firstname, users.lastname, count(*) as total_votes").Joins("join votes on votes.user_id = users.id join posts on posts.id = votes.post_id join groups on groups.id = posts.group_id").Where("groups.id = ?", group.ID).Group("users.id, users.firstname, users.lastname").Rows()
+	if err != nil {
+		log.Printf("Unable to get top user rows: %s", err)
+		c.JSON(http.StatusInternalServerError, resp.APIResponse{IsError: true, Message: "Unable to export top users"})
+		return
+	}
+	output := "Name,Total votes" + "\n"
+	for rows.Next() {
+		var firstname string
+		var lastname string
+		var totalVotes int
+		rows.Scan(&firstname, &lastname, &totalVotes)
+		data := []string{firstname + " " + lastname, fmt.Sprintf("%v", totalVotes)}
+		for i := range data {
+			data[i] = escapeForCSV(data[i])
+		}
+		output += strings.Join(data[:], ",") + "\n"
+	}
+
+	c.Writer.Header().Set("Content-Disposition", "attachment; filename=top_users.csv")
 	c.Writer.Header().Set("Content-Type", c.Request.Header.Get("Content-Type"))
 
 	c.String(http.StatusOK, output)
