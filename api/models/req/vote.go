@@ -4,3 +4,8 @@ package req
 type VoteCreateRequest struct {
 	Value int `json:"value" binding:"required"`
 }
+
+// IsValid returns whether the request has valid data
+func (req *VoteCreateRequest) IsValid() bool {
+	return req.Value == 1 || req.Value == -1
+}

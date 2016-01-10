@@ -60,6 +60,10 @@ func (handler PostHandler) CreatePost(c *gin.Context) {
 	// deserialize post
 	var post table.Post
 	c.Bind(&post)
+	if !post.IsValidForCreate() {
+		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Invalid data"})
+		return
+	}
 	post.GroupID = group.ID
 	post.UUID = uuid.NewV4().String() //TODO make sure this doesn't break everything
 	post.CreatedBy = sessions.Default(c).Get("uid").(uint)

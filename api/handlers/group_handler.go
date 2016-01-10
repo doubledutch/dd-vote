@@ -25,6 +25,10 @@ func NewGroupHandler(db gorm.DB) *GroupHandler {
 func (handler GroupHandler) GetOrCreateGroup(c *gin.Context) {
 	var group table.Group
 	c.Bind(&group)
+	if !group.IsValidForCreate() {
+		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Invalid data"})
+		return
+	}
 	handler.db.FirstOrCreate(&group, table.Group{Name: group.Name})
 	// TODO http response code should reflect get/create outcome
 	c.JSON(http.StatusCreated, resp.APIResponse{IsError: false, Value: group})

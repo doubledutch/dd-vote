@@ -30,7 +30,11 @@ func (handler UserHandler) LoginWithClientID(c *gin.Context) {
 	var userReq req.UserRequest
 	if err := c.BindJSON(&userReq); err != nil {
 		log.Printf("Unable to parse user: %s", err)
-		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Error logging in"})
+		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Insufficient data"})
+		return
+	}
+	if !userReq.IsValid() {
+		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Invalid data"})
 		return
 	}
 

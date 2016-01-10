@@ -16,6 +16,11 @@ type AdminLoginRequest struct {
 	GroupUUID string `json:"groupId" binding:"required"`
 }
 
+// IsValid returns whether the request has valid data
+func (req *UserRequest) IsValid() bool {
+	return len(req.Firstname) > 0 && len(req.Lastname) > 0
+}
+
 // ToUser converts a UserRequest object to User
 func (req *UserRequest) ToUser() table.User {
 	var user table.User

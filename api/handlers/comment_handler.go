@@ -34,6 +34,10 @@ func (handler CommentHandler) CreateComment(c *gin.Context) {
 	// deserialize comment
 	var comment table.Comment
 	c.Bind(&comment)
+	if !comment.IsValidForCreate() {
+		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Invalid data"})
+		return
+	}
 	comment.PostID = post.ID
 	comment.UserID = sessions.Default(c).Get("uid").(uint)
 

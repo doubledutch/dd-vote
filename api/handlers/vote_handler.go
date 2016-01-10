@@ -52,6 +52,10 @@ func (handler VoteHandler) CreateOrUpdateVote(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Error parsing request"})
 		return
 	}
+	if !voteReq.IsValid() {
+		c.JSON(http.StatusBadRequest, resp.APIResponse{IsError: true, Message: "Invalid data"})
+		return
+	}
 
 	// lookup post by uuid
 	var post table.Post

@@ -8,3 +8,8 @@ type Group struct {
 	// associations
 	Posts []Post
 }
+
+// IsValidForCreate returns whether the Group object has valid data
+func (group *Group) IsValidForCreate() bool {
+	return len(group.Name) > 0 && len(group.Name) <= 200
+}

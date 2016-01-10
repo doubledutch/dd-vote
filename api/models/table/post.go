@@ -16,3 +16,8 @@ type Post struct {
 	Comments []Comment `json:"comments"`
 	User     User      `json:"-" gorm:"ForeignKey:CreatedBy"`
 }
+
+// IsValidForCreate returns whether the Post object has valid data
+func (post *Post) IsValidForCreate() bool {
+	return len(post.Name) > 0 && len(post.Name) <= 140
+}

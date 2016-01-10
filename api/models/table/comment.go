@@ -12,3 +12,8 @@ type Comment struct {
 	// associations
 	User User `json:"user"`
 }
+
+// IsValidForCreate returns whether the Comment object has valid data
+func (comment *Comment) IsValidForCreate() bool {
+	return len(comment.Comment) > 0 && len(comment.Comment) <= 500
+}
