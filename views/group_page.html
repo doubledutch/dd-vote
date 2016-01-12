@@ -50,6 +50,12 @@
 
 </head>
 <body class="container" data-ng-app="snackApp" data-ng-controller="mainController">
+  <div id="auto-refresh-toggle" class="onoffswitch" data-ng-show="!isJSSDKInitialized && !moderation">
+      <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked="" ng-model="autorefresh">
+      <label class="onoffswitch-label" for="myonoffswitch">
+  </label>
+    Auto Refresh
+  </div>
 <div data-ng-show="isPresenting">
     <span class="exit-button fa fa-2x fa-times-circle-o" data-ng-click="isPresenting = false;"></span>
     <div class="present-text-container">
@@ -60,7 +66,7 @@
     <div class="col-md-8 col-md-offset-2">
 
         <div id="error-message" class="alert alert-danger" role="alert"></div>
-        <div class="alert alert-warning" role="alert" data-ng-show="!isJSSDKInitialized && !moderation">You can only edit this page inside a DoubleDutch app</div>
+        <div class="alert alert-warning" role="alert" data-ng-show="!isJSSDKInitialized && !moderation"><b>Read-only mode</b>: you can only edit this page inside a DoubleDutch app</div>
         <div class="alert alert-info" role="alert" data-ng-show="!isJSSDKInitialized && moderation"><b>Moderation mode</b>: click the trash icon to delete a question and its comments</div>
 
         <!-- LOADING ICON =============================================== -->
