@@ -22,11 +22,13 @@ A simple reddit-style voting app.
 * `POSTGRES_DATABASE` name of pg database
 * `POSTGRES_USERNAME` username for pg db
 * `POSTGRES_PASSWORD` password for pg db
+* `AUTH_SECRET` a random string of characters used to encrypt cookies
+* `GIN_MODE` {'debug', 'release'} release mode doesn't show route:function mappings
 
 
 ## Architecture
-* [Go](https://golang.org/) API 
-  * [Gin](https://github.com/gin-gonic/gin) for routing 
+* [Go](https://golang.org/) API
+  * [Gin](https://github.com/gin-gonic/gin) for routing
   * [Gorm](https://github.com/jinzhu/gorm) as an ORM
 * Web app
   * [AngularJS](https://angularjs.org/)
@@ -62,5 +64,3 @@ INSERT INTO permissions (user_id, role) VALUES (1, 0);
 * Use a websocket or push-based data to provide instant updates to clients
 * Hash passwords
 * Improve process for db migrations and seeding
-
-
