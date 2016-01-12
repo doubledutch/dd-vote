@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/doubledutch/dd-vote.svg?branch=master)](https://travis-ci.org/doubledutch/dd-vote) [![Code Climate](https://codeclimate.com/github/doubledutch/dd-vote/badges/gpa.svg)](https://codeclimate.com/github/doubledutch/dd-vote)
 
 A simple reddit-style voting app.
+![VotingView](art/voting_view.png)
 
 
 ## Local setup
@@ -32,6 +33,15 @@ A simple reddit-style voting app.
   * [Gorm](https://github.com/jinzhu/gorm) as an ORM
 * Web app
   * [AngularJS](https://angularjs.org/)
+
+## View Modes
+* **Voting mode**, as seen above
+* **Admin Panel** for exporting CSV reports
+* **Presentation mode** for showing a question fullscreen (click on the TV icon)
+* **Read-only mode** for viewing data outside of a DoubleDutch app (note that the Auto-Refresh toggle can be turned on to keep getting a stream of new data)
+![ReadOnlyView](art/readonly_view.png)
+* **Moderation mode** for deleting questions
+![ModerationView](art/moderation_view.png)
 
 ## Docker
 
