@@ -74,6 +74,10 @@ func (handler PostHandler) CreatePost(c *gin.Context) {
 		return
 	}
 
+	//TODO - this is not ideal...
+	// go gives the timestamp more precision than pg stores, so we now get the obj from pg
+	handler.db.Where("uuid = ?", post.UUID).First(&post)
+
 	// make sure comments are empty slice and not nil
 	post.Comments = make([]table.Comment, 0)
 
