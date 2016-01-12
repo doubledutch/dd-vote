@@ -104,6 +104,7 @@ angular.module('mainCtrl', ['ngRoute'])
             DD.Events.getCurrentUserAsync(function (user) {
                 var newUser = new Object();
                 newUser.userId = user.UserId || user.Id;
+                newUser.userId = parseInt(newUser.userId);
                 newUser.firstName = user.FirstName;
                 newUser.lastName = user.LastName;
                 User.save(newUser)
