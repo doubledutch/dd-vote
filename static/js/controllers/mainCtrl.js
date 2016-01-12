@@ -47,6 +47,7 @@ angular.module('mainCtrl', ['ngRoute'])
         var path = $location.path().split("/");
         var groupId = path.pop();
         var pathType = path.pop();
+        $scope.moderation = $location.search().moderation === 'true';
 
         // queued data to load
         $scope.queuedData = [];
@@ -157,6 +158,28 @@ angular.module('mainCtrl', ['ngRoute'])
                 });
 
 
+        }
+
+        $scope.deleteSnack = function(snack) {
+          bootbox.confirm('Delete "' + snack.name + '"?', function(result) {
+            if (!result) {
+              return;
+            }
+
+            Snack.remove(snack.uuid)
+                .success(function(data) {
+                  $.each($scope.snacks, function(i) {
+                      if($scope.snacks[i].uuid === snack.uuid) {
+                          $scope.snacks.splice(i,1);
+                          return false;
+                      }
+                  });
+                })
+                .error(function(data) {
+                  $('#error-message').html('Unable to delete question: ' + JSON.stringify(data.message));
+                  $('#error-message').show().delay(3000).fadeOut('slow');
+                });
+          });
         }
 
         $scope.present = function(snack) {

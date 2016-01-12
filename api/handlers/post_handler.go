@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/doubledutch/dd-vote/api/auth"
 	"github.com/jinzhu/gorm"
-	"github.com/jordanjoz/dd-vote/api/auth"
 	"github.com/satori/go.uuid"
 
 	"github.com/doubledutch/dd-vote/api/models/resp"
@@ -78,4 +78,24 @@ func (handler PostHandler) CreatePost(c *gin.Context) {
 	post.Comments = make([]table.Comment, 0)
 
 	c.JSON(http.StatusCreated, resp.APIResponse{IsError: false, Value: post})
+}
+
+// DeletePost soft deletes a question
+func (handler PostHandler) DeletePost(c *gin.Context) {
+	// lookup post by uuid
+	postUUID := c.Param("puuid")
+	var post table.Post
+	if err := handler.db.Where("uuid = ?", postUUID).Preload("Group").First(&post).Error; err != nil {
+		c.JSON(http.StatusNotFound, resp.APIResponse{IsError: true, Message: "Question does not exist"})
+		return
+	}
+
+	// make sure user is an admin
+	if !auth.HasAccessToGroup(auth.GetUserIDFromCookie(c), post.Group.Name, handler.db) {
+		c.JSON(http.StatusForbidden, resp.APIResponse{IsError: true, Message: "You don't have permission to access this group"})
+		return
+	}
+
+	handler.db.Delete(&post)
+	c.String(http.StatusOK, "Successfully deleted")
 }

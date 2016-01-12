@@ -15,6 +15,7 @@ type Post struct {
 	// associations
 	Comments []Comment `json:"comments"`
 	User     User      `json:"-" gorm:"ForeignKey:CreatedBy"`
+	Group    Group     `json:"-"`
 }
 
 // IsValidForCreate returns whether the Post object has valid data

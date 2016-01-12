@@ -81,6 +81,7 @@ func main() {
 			v1auth.Use(UseAuth)
 			v1auth.POST("/logout", uh.Logout)
 			v1auth.POST("/groups/:gname/posts", ph.CreatePost)
+			v1auth.DELETE("/posts/:puuid", ph.DeletePost)
 			v1auth.POST("/groups", gh.GetOrCreateGroup)
 			v1auth.POST("/posts/:puuid/comments", ch.CreateComment)
 			v1auth.POST("/posts/:puuid/votes", vh.CreateOrUpdateVote)

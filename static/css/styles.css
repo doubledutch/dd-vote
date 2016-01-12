@@ -213,7 +213,7 @@ h1 {
 }
 
 .present-text-container {
-    position: relative 
+    position: relative
 }
 
 .present-text {
@@ -252,4 +252,8 @@ ul {
     -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
 }
+
+.delete-icon {
+  color: darkred;
+  margin-left: 10px;
 }
