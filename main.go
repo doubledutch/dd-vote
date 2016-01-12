@@ -57,7 +57,7 @@ func main() {
 	router.Static("/img", "./static/img")
 
 	// session management
-	store := sessions.NewCookieStore([]byte("secret")) //TODO use environment variable secret
+	store := sessions.NewCookieStore([]byte(getAuthSecret()))
 	router.Use(sessions.Sessions("ddvote_session", store))
 
 	// view routes
@@ -92,6 +92,14 @@ func main() {
 	}
 
 	router.Run(":8081")
+}
+
+func getAuthSecret() string {
+	secret := os.Getenv("AUTH_SECRET")
+	if secret != "" {
+		return secret
+	}
+	return "insecuresecret"
 }
 
 func getPostgresConn() string {
