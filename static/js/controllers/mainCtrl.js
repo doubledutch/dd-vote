@@ -65,8 +65,9 @@ angular.module('mainCtrl', ['ngRoute'])
                     if ($scope.loading) {
                         $scope.snacks = data.value;
                         $scope.loading = false;
-                    }
-                    else if (!angular.equals($scope.snacks, data.value)) {
+                    } else if ($scope.autorefresh) {
+                        $scope.snacks = data.value;
+                    } else if (!angular.equals($scope.snacks, data.value)) {
                         $('#new-data-toast').stop().fadeIn(400);
                         $scope.queuedData = data.value;
                     }
@@ -90,6 +91,11 @@ angular.module('mainCtrl', ['ngRoute'])
         var showJSSDKError = $timeout(function () {
             $scope.isJSSDKInitialized = false;
             loadData();
+
+            // continue to get new data on an interval
+            $interval(function () {
+                loadData();
+            }, 15000);
         }, 500);
         DD.Events.onReady(function() {
             // mark js sdk as initialized

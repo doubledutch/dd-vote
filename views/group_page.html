@@ -50,6 +50,12 @@
 
 </head>
 <body class="container" data-ng-app="snackApp" data-ng-controller="mainController">
+  <div id="auto-refresh-toggle" class="onoffswitch" data-ng-show="!isJSSDKInitialized && !moderation">
+      <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked="" ng-model="autorefresh">
+      <label class="onoffswitch-label" for="myonoffswitch">
+  </label>
+    Auto Refresh
+  </div>
 <div data-ng-show="isPresenting">
     <span class="exit-button fa fa-2x fa-times-circle-o" data-ng-click="isPresenting = false;"></span>
     <div class="present-text-container">
