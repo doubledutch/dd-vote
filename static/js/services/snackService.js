@@ -21,6 +21,13 @@ angular.module('snackService', [])
                     headers: { 'Content-Type' : 'application/json' },
                     data: snackData
                 });
+            },
+
+            remove: function(snackId) {
+              return $http({
+                  url: '../../api/v1/posts/' + snackId,
+                  method: "DELETE"
+              });
             }
         }
 

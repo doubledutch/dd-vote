@@ -35,6 +35,7 @@
     <script src="../../js/services/commentService.js"></script>
     <script src="../../js/app.js"></script>
     <script src="../../js/libs/bootstrap-maxlength.min.js"></script>
+    <script src="../../js/libs/bootbox.min.js"></script>
 
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -59,7 +60,8 @@
     <div class="col-md-8 col-md-offset-2">
 
         <div id="error-message" class="alert alert-danger" role="alert"></div>
-        <div class="alert alert-warning" role="alert" data-ng-show="!isJSSDKInitialized">You can only edit this page inside a DoubleDutch app</div>
+        <div class="alert alert-warning" role="alert" data-ng-show="!isJSSDKInitialized && !moderation">You can only edit this page inside a DoubleDutch app</div>
+        <div class="alert alert-info" role="alert" data-ng-show="!isJSSDKInitialized && moderation"><b>Moderation mode</b>: click the trash icon to delete a question and its comments</div>
 
         <!-- LOADING ICON =============================================== -->
         <p class="text-center" data-ng-show="loading && isJSSDKInitialized"><span class="fa fa-refresh fa-5x fa-spin"></span></p>
@@ -109,7 +111,7 @@
                 </div>
                 <!-- QUESTION TITLE -->
                 <div class="snack-list-item-text-container ios-toggle" data-toggle="collapse" data-target="#comments-{{ snack.uuid }}" >
-                    <div data-ng-class="snack-list-item-text" >{{ snack.name }} ({{ snack.sum_votes }}) <span class="fa fa-television" data-ng-show="!isJSSDKInitialized" data-ng-click="present(snack)"></span>
+                    <div data-ng-class="snack-list-item-text" >{{ snack.name }} ({{ snack.sum_votes }}) <span class="fa fa-television" data-ng-show="!isJSSDKInitialized" data-ng-click="present(snack)"></span> <span class="fa fa-trash delete-icon" data-ng-show="moderation" data-ng-click="deleteSnack(snack)"></span>
                     </div>
                     <div class="snack-list-item-subtitle" >{{ snack.comments ? snack.comments.length : 0 }} comment{{ ((snack.comments.length) == 1) ? '' : 's'}}
                     </div>
