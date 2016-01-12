@@ -17,7 +17,7 @@ angular.module('adminCtrl', ['ngRoute'])
                 .success(function(data) {
                     if (!data.error) {
                         // reload page now that we've logged in
-                        location.reload();
+                        location.reload(true);
                     } else {
                         $('#error-message').html('Unable to login...</br>' + JSON.stringify(data.message));
                         $('#error-message').show().delay(3000).fadeOut('slow');
@@ -25,6 +25,17 @@ angular.module('adminCtrl', ['ngRoute'])
                 })
                 .error(function(data) {
                     console.log(data);
+                });
+        }
+
+        $scope.adminLogout = function() {
+
+            Admin.logout()
+                .success(function(data) {
+                  location.reload(true);
+                })
+                .error(function(data) {
+                  console.log(data);
                 });
         }
 

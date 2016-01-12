@@ -11,6 +11,12 @@ angular.module('adminService', [])
                     headers: {'Content-Type': 'application/json'},
                     data: userData
                 });
+            },
+            logout: function () {
+                return $http({
+                    method: 'POST',
+                    url: '../../api/v1/logout'
+                });
             }
         }
 
