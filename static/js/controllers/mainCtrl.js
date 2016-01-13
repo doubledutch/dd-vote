@@ -160,9 +160,8 @@ angular.module('mainCtrl', ['ngRoute'])
             });
         });
 
-        // function to handle submitting the form
-        // SAVE A SNACK ======================================================
-        $scope.submitSnack = function() {
+        // submit a new question
+        $scope.submitQuestion = function() {
 
             var MAX_LENGTH = 140;
 
@@ -190,7 +189,7 @@ angular.module('mainCtrl', ['ngRoute'])
                 });
         }
 
-        $scope.deleteSnack = function(snack) {
+        $scope.deleteQuestion = function(snack) {
           // confirm that the user wants to delete the post
           bootbox.confirm('Delete "' + snack.name + '"?', function(result) {
             if (!result) {
@@ -216,6 +215,7 @@ angular.module('mainCtrl', ['ngRoute'])
     // inject the Vote service into our controller
     .controller('voteController', function($scope, $http, Vote) {
 
+        // vote on a post
         $scope.vote = function(snackId, value) {
 
             if (!$scope.isJSSDKInitialized) {
