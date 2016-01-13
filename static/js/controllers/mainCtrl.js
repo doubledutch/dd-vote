@@ -79,10 +79,8 @@ angular.module('mainCtrl', ['ngRoute'])
         // queued data to load
         $scope.queuedData = [];
 
-        var loadData = function() {
-            // get all the snacks first and bind it to the $scope.snacks object
-            // use the function we created in our service
-            // GET ALL SNACKS ====================================================
+        // get all the questions in a group first and bind it to the $scope.snacks
+        var loadQuestions = function() {
             Snack.get(groupId)
                 .success(function(data) {
                     for (var i in data.value) {
@@ -101,31 +99,46 @@ angular.module('mainCtrl', ['ngRoute'])
                         $scope.queueData(data);
                     }
                 });
-
-            // only load vote data once
-            if ($scope.votesLoading) {
-              Vote.getUserVotes(groupId)
-                  .success(function(data) {
-                      $scope.votesLoading = false;
-                      for (var i in data.value) {
-                          // update our hashmap of post UUIDs with the user's vote value
-                          $scope.voteData[data.value[i].post_uuid] = data.value[i].value;
-                      }
-                  });
-            }
         };
+
+        // get all of the user's votes for questions in this group and put them
+        // in a hashmap mapping post UUIDs to vote values
+        var loadUserVotes = function() {
+          // only load vote data once
+          if ($scope.votesLoading) {
+            Vote.getUserVotes(groupId)
+                .success(function(data) {
+                    $scope.votesLoading = false;
+                    for (var i in data.value) {
+                        // update our hashmap of post UUIDs with the user's vote value
+                        $scope.voteData[data.value[i].post_uuid] = data.value[i].value;
+                    }
+                });
+          }
+        }
+
+        // get questions data and user data for group
+        var loadData = function() {
+            loadQuestions();
+            loadUserVotes();
+        }
+
+        // load data and continue to get new data every 15s
+        var loadDataWithInterval = function() {
+          loadData();
+
+          // continue to get new data on an interval
+          $interval(function () {
+              loadData();
+          }, 15000);
+        }
 
         // assume js sdk is initialized, but show error after .5 seconds if
         // it doesn't actually get initialized in that time
         $scope.isJSSDKInitialized = true;
         var showJSSDKError = $timeout(function () {
             $scope.isJSSDKInitialized = false;
-            loadData();
-
-            // continue to get new data on an interval
-            $interval(function () {
-                loadData();
-            }, 15000);
+            loadDataWithInterval();
         }, 500);
         DD.Events.onReady(function() {
             // mark js sdk as initialized
@@ -133,24 +146,17 @@ angular.module('mainCtrl', ['ngRoute'])
             $scope.isJSSDKInitialized = true;
             DD.Events.getCurrentUserAsync(function (user) {
                 var newUser = new Object();
-                newUser.userId = user.UserId || user.Id;
-                newUser.userId = parseInt(newUser.userId);
+                newUser.userId = user.UserId || user.Id; // Android passes userId and iOS passes Id
+                newUser.userId = parseInt(newUser.userId); // Android passes userId as a string
                 newUser.firstName = user.FirstName;
                 newUser.lastName = user.LastName;
                 User.save(newUser)
                     .success(function (data) {
-                        // check for failure
-                        if (data.error) {
-                            $scope.showError('Unable to log in...</br>' + data.message, false)
-                            return;
-                        }
-                        loadData();
-
-                        // continue to get new data on an interval
-                        $interval(function () {
-                            loadData();
-                        }, 15000);
+                        loadDataWithInterval();
                     })
+                    .error(function(data) {
+                        $scope.showError('Unable to log in...</br>' + data.message, false)
+                    });
             });
         });
 
@@ -170,16 +176,14 @@ angular.module('mainCtrl', ['ngRoute'])
             // use the function we created in our service
             Snack.save($scope.snackData, groupId)
                 .success(function(data) {
-                    if (!data.error) {
-                        // add snack to list
-                        snack = data.value;
-                        snack.sum_votes = snack.upvotes - snack.downvotes;
-                        snack.comments = [];
-                        $scope.snacks.push(snack);
+                    // add snack to list
+                    snack = data.value;
+                    snack.sum_votes = snack.upvotes - snack.downvotes;
+                    snack.comments = [];
+                    $scope.snacks.push(snack);
 
-                        // clear input
-                        $scope.snackData.name = null;
-                    }
+                    // clear input
+                    $scope.snackData.name = null;
                 })
                 .error(function(data) {
                     $scope.showError('Unable to submit question, please try again...</br>' + data.message, true)
@@ -270,13 +274,11 @@ angular.module('mainCtrl', ['ngRoute'])
             // use the function we created in our service
             Comment.save(snackId, {comment: $scope.commentText})
                 .success(function (data) {
-                    if (!data.error) {
-                        // add to snack's comments
-                        for (index = 0; index < $scope.snacks.length; index++) {
-                            if ($scope.snacks[index].uuid == snackId) {
-                                $scope.snacks[index].comments.push(data.value);
-                                break;
-                            }
+                    // add to snack's comments
+                    for (index = 0; index < $scope.snacks.length; index++) {
+                        if ($scope.snacks[index].uuid == snackId) {
+                            $scope.snacks[index].comments.push(data.value);
+                            break;
                         }
                     }
                 })
