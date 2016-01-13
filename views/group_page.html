@@ -62,7 +62,7 @@
         <div class="present-text ">{{ presentedSnack.name }}</div>
     </div>
 </div>
-<div data-ng-controller="GroupHandler" data-ng-hide="isPresenting">
+<div data-ng-controller="groupController" data-ng-hide="isPresenting">
     <div class="col-md-8 col-md-offset-2">
 
         <div id="error-message" class="alert alert-danger" role="alert"></div>
@@ -107,7 +107,7 @@
         <!-- THE QUESTIONS =============================================== -->
         <div class="snack-list-item" data-ng-show="!loading"
              data-ng-repeat="snack in snacks | filter:snackData.name | orderBy: predicate:reverse"
-             data-ng-controller="VoteHandler" id="snack-{{ snack.uuid }}">
+             data-ng-controller="voteController" id="snack-{{ snack.uuid }}">
             <div >
                 <!-- UPVOTES -->
                 <div class="arrow-container">
@@ -134,7 +134,7 @@
                 <div class="comments text-left ios-toggle" data-ng-repeat="comment in snack.comments" data-target="#comments-{{ snack.id }}" >
                     <div><div class="username">{{ comment.user.firstname }} {{ comment.user.lastname }}</div> <span ng-bind-html="comment.comment | linky:'_blank'"></span> <div class="timestamp">{{ timeSince(comment.created_at) }}</div></div>
                 </div>
-                <form data-ng-submit="submitComment(snack.uuid)" data-ng-controller="CommentHandler" class="comment-form" data-ng-show="isJSSDKInitialized">
+                <form data-ng-submit="submitComment(snack.uuid)" data-ng-controller="commentController" class="comment-form" data-ng-show="isJSSDKInitialized">
                     <div class="input-group comment-input-group">
                         <input type="text" class="form-control input-sm comment-input" placeholder="Write a comment" maxlength="500" ng-model="commentText"/>
                         <span class="input-group-btn">

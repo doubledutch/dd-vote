@@ -28,6 +28,7 @@ angular.module('mainCtrl', ['ngRoute'])
             return moment.min(moment.utc(date), moment()).fromNow();
         };
 
+        // show an error message in a box at the top of the page. Set fadeOut to true to disappear after an interval
         $scope.showError = function(text, fadeOut) {
           $('#error-message').html(text);
           $('#error-message').show();
@@ -36,7 +37,25 @@ angular.module('mainCtrl', ['ngRoute'])
           }
         }
 
-        // set default sort values
+        // put a post into Presentation Mode
+        $scope.present = function(snack) {
+            $scope.presentedSnack = snack;
+            $scope.isPresenting = true;
+        }
+
+        // queue up new data and show the user the "Tap to load new data" floating box
+        $scope.queueData = function(data) {
+            $('#new-data-toast').stop().fadeIn(400);
+            $scope.queuedData = data.value;
+        }
+
+        // load queued data into the current dataset
+        $scope.loadQueuedData = function() {
+            $('#new-data-toast').stop().fadeOut(400);
+            $scope.snacks = $scope.queuedData;
+        }
+
+        // set default sort values for the tabs
         $scope.predicate = 'sum_votes';
         $scope.reverse = true;
 
@@ -66,18 +85,20 @@ angular.module('mainCtrl', ['ngRoute'])
             // GET ALL SNACKS ====================================================
             Snack.get(groupId)
                 .success(function(data) {
-                    // calculate sum of votes
                     for (var i in data.value) {
+                        // calculate sum of votes
                         data.value[i].sum_votes = data.value[i].upvotes - data.value[i].downvotes;
                     }
                     if ($scope.loading) {
+                        // we were showing the loading spinner, now show the data
                         $scope.snacks = data.value;
                         $scope.loading = false;
                     } else if ($scope.autorefresh) {
+                        // auto-refresh mode is turned on, so automatically update data
                         $scope.snacks = data.value;
                     } else if (!angular.equals($scope.snacks, data.value)) {
-                        $('#new-data-toast').stop().fadeIn(400);
-                        $scope.queuedData = data.value;
+                        // queue up new data and show appropriate message
+                        $scope.queueData(data);
                     }
                 });
 
@@ -87,6 +108,7 @@ angular.module('mainCtrl', ['ngRoute'])
                   .success(function(data) {
                       $scope.votesLoading = false;
                       for (var i in data.value) {
+                          // update our hashmap of post UUIDs with the user's vote value
                           $scope.voteData[data.value[i].post_uuid] = data.value[i].value;
                       }
                   });
@@ -165,6 +187,7 @@ angular.module('mainCtrl', ['ngRoute'])
         }
 
         $scope.deleteSnack = function(snack) {
+          // confirm that the user wants to delete the post
           bootbox.confirm('Delete "' + snack.name + '"?', function(result) {
             if (!result) {
               return;
@@ -172,6 +195,7 @@ angular.module('mainCtrl', ['ngRoute'])
 
             Snack.remove(snack.uuid)
                 .success(function(data) {
+                  // remove the approriate post
                   $.each($scope.snacks, function(i) {
                       if($scope.snacks[i].uuid === snack.uuid) {
                           $scope.snacks.splice(i,1);
@@ -184,19 +208,9 @@ angular.module('mainCtrl', ['ngRoute'])
                 });
           });
         }
-
-        $scope.present = function(snack) {
-            $scope.presentedSnack = snack;
-            $scope.isPresenting = true;
-        }
-
-        $scope.loadQueuedData = function() {
-            $('#new-data-toast').stop().fadeOut(400);
-            $scope.snacks = $scope.queuedData;
-        }
     })
     // inject the Vote service into our controller
-    .controller('VoteHandler', function($scope, $http, Vote) {
+    .controller('voteController', function($scope, $http, Vote) {
 
         $scope.vote = function(snackId, value) {
 
@@ -233,22 +247,22 @@ angular.module('mainCtrl', ['ngRoute'])
 
             Vote.save(snackId, {value: value})
                 .success(function(data) {
-                    // do nothing
+                    // do nothing because we have already updated our local data
                 })
                 .error(function(data) {
+                    // we could rollback here, but it's probably not worth it
                     console.log(data);
                 });
         }
-
     })
 
     // inject the Group service into our controller
-    .controller('GroupHandler', function($scope, $http, $location, Group) {
+    .controller('groupController', function($scope, $http, $location, Group) {
         // make architecture better
     })
 
     // inject the comment service into our controller
-    .controller('CommentHandler', function($scope, $http, Comment) {
+    .controller('commentController', function($scope, $http, Comment) {
 
         $scope.submitComment = function (snackId) {
 
@@ -277,13 +291,6 @@ angular.module('mainCtrl', ['ngRoute'])
     })
 
     .config(function ($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/index.php/g/:groupId', {
-                controller: 'MainController'
-            });
-
-        // configure html5 to get links working on jsfiddle
+        // this allows the url path parsing to work
         $locationProvider.html5Mode(true);
-
-
     });
