@@ -28,6 +28,14 @@ angular.module('mainCtrl', ['ngRoute'])
             return moment.min(moment.utc(date), moment()).fromNow();
         };
 
+        $scope.showError = function(text, fadeOut) {
+          $('#error-message').html(text);
+          $('#error-message').show();
+          if (fadeOut) {
+            $('#error-message').delay(3000).fadeOut('slow')
+          }
+        }
+
         // set default sort values
         $scope.predicate = 'sum_votes';
         $scope.reverse = true;
@@ -111,8 +119,7 @@ angular.module('mainCtrl', ['ngRoute'])
                     .success(function (data) {
                         // check for failure
                         if (data.error) {
-                            $('#error-message').show();
-                            $('#error-message').html('Unable to log in...</br>' + JSON.stringify(data.message));
+                            $scope.showError('Unable to log in...</br>' + data.message, false)
                             return;
                         }
                         loadData();
@@ -133,8 +140,7 @@ angular.module('mainCtrl', ['ngRoute'])
 
             // check if question is too long
             if ($scope.snackData.name.length > MAX_LENGTH) {
-                $('#error-message').html('Questions cannot be longer than ' + MAX_LENGTH + ' characters');
-                $('#error-message').show().delay(3000).fadeOut('slow');
+                $scope.showError('Questions cannot be longer than ' + MAX_LENGTH + ' characters', true)
                 return;
             }
 
@@ -151,20 +157,11 @@ angular.module('mainCtrl', ['ngRoute'])
 
                         // clear input
                         $scope.snackData.name = null;
-                    } else {
-                        $('#error-message').html('Unable to submit question, please try again...</br>' + JSON.stringify(data.message));
-                        $('#error-message').show().delay(3000).fadeOut('slow');
                     }
-
-                    // scroll snack into view
-                    //$location.hash('snack-' + snack.id);
-                    //$anchorScroll();
                 })
                 .error(function(data) {
-                    console.log(data);
+                    $scope.showError('Unable to submit question, please try again...</br>' + data.message, true)
                 });
-
-
         }
 
         $scope.deleteSnack = function(snack) {
@@ -183,8 +180,7 @@ angular.module('mainCtrl', ['ngRoute'])
                   });
                 })
                 .error(function(data) {
-                  $('#error-message').html('Unable to delete question: ' + JSON.stringify(data.message));
-                  $('#error-message').show().delay(3000).fadeOut('slow');
+                  $scope.showError('Unable to delete question: ' + data.message, true)
                 });
           });
         }
