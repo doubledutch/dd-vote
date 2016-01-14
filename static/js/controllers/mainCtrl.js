@@ -28,7 +28,34 @@ angular.module('mainCtrl', ['ngRoute'])
             return moment.min(moment.utc(date), moment()).fromNow();
         };
 
-        // set default sort values
+        // show an error message in a box at the top of the page. Set fadeOut to true to disappear after an interval
+        $scope.showError = function(text, fadeOut) {
+          $('#error-message').html(text);
+          $('#error-message').show();
+          if (fadeOut) {
+            $('#error-message').delay(3000).fadeOut('slow')
+          }
+        }
+
+        // put a post into Presentation Mode
+        $scope.present = function(snack) {
+            $scope.presentedSnack = snack;
+            $scope.isPresenting = true;
+        }
+
+        // queue up new data and show the user the "Tap to load new data" floating box
+        $scope.queueData = function(data) {
+            $('#new-data-toast').stop().fadeIn(400);
+            $scope.queuedData = data.value;
+        }
+
+        // load queued data into the current dataset
+        $scope.loadQueuedData = function() {
+            $('#new-data-toast').stop().fadeOut(400);
+            $scope.snacks = $scope.queuedData;
+        }
+
+        // set default sort values for the tabs
         $scope.predicate = 'sum_votes';
         $scope.reverse = true;
 
@@ -52,50 +79,66 @@ angular.module('mainCtrl', ['ngRoute'])
         // queued data to load
         $scope.queuedData = [];
 
-        var loadData = function() {
-            // get all the snacks first and bind it to the $scope.snacks object
-            // use the function we created in our service
-            // GET ALL SNACKS ====================================================
+        // get all the questions in a group first and bind it to the $scope.snacks
+        var loadQuestions = function() {
             Snack.get(groupId)
                 .success(function(data) {
-                    // calculate sum of votes
                     for (var i in data.value) {
+                        // calculate sum of votes
                         data.value[i].sum_votes = data.value[i].upvotes - data.value[i].downvotes;
                     }
                     if ($scope.loading) {
+                        // we were showing the loading spinner, now show the data
                         $scope.snacks = data.value;
                         $scope.loading = false;
                     } else if ($scope.autorefresh) {
+                        // auto-refresh mode is turned on, so automatically update data
                         $scope.snacks = data.value;
                     } else if (!angular.equals($scope.snacks, data.value)) {
-                        $('#new-data-toast').stop().fadeIn(400);
-                        $scope.queuedData = data.value;
+                        // queue up new data and show appropriate message
+                        $scope.queueData(data);
                     }
                 });
-
-            // only load vote data once
-            if ($scope.votesLoading) {
-              Vote.getUserVotes(groupId)
-                  .success(function(data) {
-                      $scope.votesLoading = false;
-                      for (var i in data.value) {
-                          $scope.voteData[data.value[i].post_uuid] = data.value[i].value;
-                      }
-                  });
-            }
         };
+
+        // get all of the user's votes for questions in this group and put them
+        // in a hashmap mapping post UUIDs to vote values
+        var loadUserVotes = function() {
+          // only load vote data once
+          if ($scope.votesLoading) {
+            Vote.getUserVotes(groupId)
+                .success(function(data) {
+                    $scope.votesLoading = false;
+                    for (var i in data.value) {
+                        // update our hashmap of post UUIDs with the user's vote value
+                        $scope.voteData[data.value[i].post_uuid] = data.value[i].value;
+                    }
+                });
+          }
+        }
+
+        // get questions data and user data for group
+        var loadData = function() {
+            loadQuestions();
+            loadUserVotes();
+        }
+
+        // load data and continue to get new data every 15s
+        var loadDataWithInterval = function() {
+          loadData();
+
+          // continue to get new data on an interval
+          $interval(function () {
+              loadData();
+          }, 15000);
+        }
 
         // assume js sdk is initialized, but show error after .5 seconds if
         // it doesn't actually get initialized in that time
         $scope.isJSSDKInitialized = true;
         var showJSSDKError = $timeout(function () {
             $scope.isJSSDKInitialized = false;
-            loadData();
-
-            // continue to get new data on an interval
-            $interval(function () {
-                loadData();
-            }, 15000);
+            loadDataWithInterval();
         }, 500);
         DD.Events.onReady(function() {
             // mark js sdk as initialized
@@ -103,38 +146,28 @@ angular.module('mainCtrl', ['ngRoute'])
             $scope.isJSSDKInitialized = true;
             DD.Events.getCurrentUserAsync(function (user) {
                 var newUser = new Object();
-                newUser.userId = user.UserId || user.Id;
-                newUser.userId = parseInt(newUser.userId);
+                newUser.userId = user.UserId || user.Id; // Android passes userId and iOS passes Id
+                newUser.userId = parseInt(newUser.userId); // Android passes userId as a string
                 newUser.firstName = user.FirstName;
                 newUser.lastName = user.LastName;
                 User.save(newUser)
                     .success(function (data) {
-                        // check for failure
-                        if (data.error) {
-                            $('#error-message').show();
-                            $('#error-message').html('Unable to log in...</br>' + JSON.stringify(data.message));
-                            return;
-                        }
-                        loadData();
-
-                        // continue to get new data on an interval
-                        $interval(function () {
-                            loadData();
-                        }, 15000);
+                        loadDataWithInterval();
                     })
+                    .error(function(data) {
+                        $scope.showError('Unable to log in...</br>' + data.message, false)
+                    });
             });
         });
 
-        // function to handle submitting the form
-        // SAVE A SNACK ======================================================
-        $scope.submitSnack = function() {
+        // submit a new question
+        $scope.submitQuestion = function() {
 
             var MAX_LENGTH = 140;
 
             // check if question is too long
             if ($scope.snackData.name.length > MAX_LENGTH) {
-                $('#error-message').html('Questions cannot be longer than ' + MAX_LENGTH + ' characters');
-                $('#error-message').show().delay(3000).fadeOut('slow');
+                $scope.showError('Questions cannot be longer than ' + MAX_LENGTH + ' characters', true)
                 return;
             }
 
@@ -142,32 +175,22 @@ angular.module('mainCtrl', ['ngRoute'])
             // use the function we created in our service
             Snack.save($scope.snackData, groupId)
                 .success(function(data) {
-                    if (!data.error) {
-                        // add snack to list
-                        snack = data.value;
-                        snack.sum_votes = snack.upvotes - snack.downvotes;
-                        snack.comments = [];
-                        $scope.snacks.push(snack);
+                    // add snack to list
+                    snack = data.value;
+                    snack.sum_votes = snack.upvotes - snack.downvotes;
+                    snack.comments = [];
+                    $scope.snacks.push(snack);
 
-                        // clear input
-                        $scope.snackData.name = null;
-                    } else {
-                        $('#error-message').html('Unable to submit question, please try again...</br>' + JSON.stringify(data.message));
-                        $('#error-message').show().delay(3000).fadeOut('slow');
-                    }
-
-                    // scroll snack into view
-                    //$location.hash('snack-' + snack.id);
-                    //$anchorScroll();
+                    // clear input
+                    $scope.snackData.name = null;
                 })
                 .error(function(data) {
-                    console.log(data);
+                    $scope.showError('Unable to submit question, please try again...</br>' + data.message, true)
                 });
-
-
         }
 
-        $scope.deleteSnack = function(snack) {
+        $scope.deleteQuestion = function(snack) {
+          // confirm that the user wants to delete the post
           bootbox.confirm('Delete "' + snack.name + '"?', function(result) {
             if (!result) {
               return;
@@ -175,6 +198,7 @@ angular.module('mainCtrl', ['ngRoute'])
 
             Snack.remove(snack.uuid)
                 .success(function(data) {
+                  // remove the approriate post
                   $.each($scope.snacks, function(i) {
                       if($scope.snacks[i].uuid === snack.uuid) {
                           $scope.snacks.splice(i,1);
@@ -183,25 +207,15 @@ angular.module('mainCtrl', ['ngRoute'])
                   });
                 })
                 .error(function(data) {
-                  $('#error-message').html('Unable to delete question: ' + JSON.stringify(data.message));
-                  $('#error-message').show().delay(3000).fadeOut('slow');
+                  $scope.showError('Unable to delete question: ' + data.message, true)
                 });
           });
         }
-
-        $scope.present = function(snack) {
-            $scope.presentedSnack = snack;
-            $scope.isPresenting = true;
-        }
-
-        $scope.loadQueuedData = function() {
-            $('#new-data-toast').stop().fadeOut(400);
-            $scope.snacks = $scope.queuedData;
-        }
     })
     // inject the Vote service into our controller
-    .controller('VoteHandler', function($scope, $http, Vote) {
+    .controller('voteController', function($scope, $http, Vote) {
 
+        // vote on a post
         $scope.vote = function(snackId, value) {
 
             if (!$scope.isJSSDKInitialized) {
@@ -237,22 +251,22 @@ angular.module('mainCtrl', ['ngRoute'])
 
             Vote.save(snackId, {value: value})
                 .success(function(data) {
-                    // do nothing
+                    // do nothing because we have already updated our local data
                 })
                 .error(function(data) {
+                    // we could rollback here, but it's probably not worth it
                     console.log(data);
                 });
         }
-
     })
 
     // inject the Group service into our controller
-    .controller('GroupHandler', function($scope, $http, $location, Group) {
+    .controller('groupController', function($scope, $http, $location, Group) {
         // make architecture better
     })
 
     // inject the comment service into our controller
-    .controller('CommentHandler', function($scope, $http, Comment) {
+    .controller('commentController', function($scope, $http, Comment) {
 
         $scope.submitComment = function (snackId) {
 
@@ -260,13 +274,11 @@ angular.module('mainCtrl', ['ngRoute'])
             // use the function we created in our service
             Comment.save(snackId, {comment: $scope.commentText})
                 .success(function (data) {
-                    if (!data.error) {
-                        // add to snack's comments
-                        for (index = 0; index < $scope.snacks.length; index++) {
-                            if ($scope.snacks[index].uuid == snackId) {
-                                $scope.snacks[index].comments.push(data.value);
-                                break;
-                            }
+                    // add to snack's comments
+                    for (index = 0; index < $scope.snacks.length; index++) {
+                        if ($scope.snacks[index].uuid == snackId) {
+                            $scope.snacks[index].comments.push(data.value);
+                            break;
                         }
                     }
                 })
@@ -281,13 +293,6 @@ angular.module('mainCtrl', ['ngRoute'])
     })
 
     .config(function ($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/index.php/g/:groupId', {
-                controller: 'MainController'
-            });
-
-        // configure html5 to get links working on jsfiddle
+        // this allows the url path parsing to work
         $locationProvider.html5Mode(true);
-
-
     });
