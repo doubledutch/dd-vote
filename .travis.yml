@@ -1,5 +1,9 @@
 language: go
-
+install:
+  - make get-deps
+env:
+  - GO15VENDOREXPERIMENT=1
 go:
   - 1.5
+  - 1.7.1
   - tip
