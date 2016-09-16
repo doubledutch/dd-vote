@@ -12,11 +12,11 @@ import (
 
 // PageController manages browser requests related to group pages
 type PageController struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewPageController creates a new instance
-func NewPageController(db gorm.DB) *PageController {
+func NewPageController(db *gorm.DB) *PageController {
 	return &PageController{db: db}
 }
 

@@ -11,11 +11,11 @@ import (
 
 // AdminController manages browser requests for admin pages
 type AdminController struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewAdminController creates a new instance
-func NewAdminController(db gorm.DB) *AdminController {
+func NewAdminController(db *gorm.DB) *AdminController {
 	return &AdminController{db: db}
 }
 

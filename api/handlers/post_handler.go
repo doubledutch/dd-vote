@@ -14,11 +14,11 @@ import (
 
 // PostHandler manages api endpoints for posts (questions)
 type PostHandler struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewPostHandler creates a new instance
-func NewPostHandler(db gorm.DB) *PostHandler {
+func NewPostHandler(db *gorm.DB) *PostHandler {
 	return &PostHandler{db: db}
 }
 

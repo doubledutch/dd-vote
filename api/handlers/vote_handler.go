@@ -15,11 +15,11 @@ import (
 
 // VoteHandler manages api endpoints for voting
 type VoteHandler struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewVoteHandler creates a new instance
-func NewVoteHandler(db gorm.DB) *VoteHandler {
+func NewVoteHandler(db *gorm.DB) *VoteHandler {
 	return &VoteHandler{db: db}
 }
 
