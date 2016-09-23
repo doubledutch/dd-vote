@@ -15,7 +15,7 @@ const (
 )
 
 // HasAccessToGroup checks if a user is an admin for a group
-func HasAccessToGroup(uid uint, groupUUID string, db gorm.DB) bool {
+func HasAccessToGroup(uid uint, groupUUID string, db *gorm.DB) bool {
 	var permissions []table.Permission
 	db.Where("user_id = ?", uid).Find(&permissions)
 	for _, p := range permissions {

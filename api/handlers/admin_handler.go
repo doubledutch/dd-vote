@@ -15,11 +15,11 @@ import (
 
 // AdminHandler manages api endpoints for admins
 type AdminHandler struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewAdminHandler creates a new instance
-func NewAdminHandler(db gorm.DB) *AdminHandler {
+func NewAdminHandler(db *gorm.DB) *AdminHandler {
 	return &AdminHandler{db: db}
 }
 

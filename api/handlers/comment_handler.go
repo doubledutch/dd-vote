@@ -13,11 +13,11 @@ import (
 
 // CommentHandler manages api endpoints for comments
 type CommentHandler struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewCommentHandler creates a new instance
-func NewCommentHandler(db gorm.DB) *CommentHandler {
+func NewCommentHandler(db *gorm.DB) *CommentHandler {
 	return &CommentHandler{db: db}
 }
 

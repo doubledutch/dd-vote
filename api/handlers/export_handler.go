@@ -16,11 +16,11 @@ import (
 
 // ExportHandler manages api endpoints for exporting reports
 type ExportHandler struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewExportHandler creates a new instance
-func NewExportHandler(db gorm.DB) *ExportHandler {
+func NewExportHandler(db *gorm.DB) *ExportHandler {
 	return &ExportHandler{db: db}
 }
 

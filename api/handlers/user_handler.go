@@ -15,11 +15,11 @@ import (
 
 // UserHandler manages api endpoints for users
 type UserHandler struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewUserHandler creates a new instance
-func NewUserHandler(db gorm.DB) *UserHandler {
+func NewUserHandler(db *gorm.DB) *UserHandler {
 	return &UserHandler{db: db}
 }
 

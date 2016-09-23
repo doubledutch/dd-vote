@@ -12,11 +12,11 @@ import (
 
 // GroupHandler manges api endpoints for groups
 type GroupHandler struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
 // NewGroupHandler creates a new instance
-func NewGroupHandler(db gorm.DB) *GroupHandler {
+func NewGroupHandler(db *gorm.DB) *GroupHandler {
 	return &GroupHandler{db: db}
 }
 
