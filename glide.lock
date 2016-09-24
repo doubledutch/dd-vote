@@ -1,5 +1,5 @@
-hash: e9171691c1847b87b31ee4444eb29f71f941aed1f518a25bea5dcf3d35d61fff
-updated: 2016-09-17T09:33:52.248898462+12:00
+hash: 483268fe75eafd30f6646c21c16c33829d52e5f3802f92b62d4edc4c92de7aec
+updated: 2016-09-24T18:09:14.567417504+12:00
 imports:
 - name: github.com/boj/redistore
   version: fc113767cd6b051980f260d6dbe84b2740c46ab0
@@ -17,6 +17,8 @@ imports:
   subpackages:
   - binding
   - render
+- name: github.com/go-sql-driver/mysql
+  version: 0b58b37b664c21f3010e836f1b931e1d0b0b0685
 - name: github.com/golang/protobuf
   version: 2402d76f3d41f928c7902a765dfc872356dd3aad
   subpackages:
@@ -26,15 +28,15 @@ imports:
 - name: github.com/gorilla/securecookie
   version: c13558c2b1c44da35e0eb043053609a5ba3a1f19
 - name: github.com/gorilla/sessions
-  version: 7ab2742f1e374be6675e9a4eca54fe529221ae3a
+  version: ca9ada44574153444b00d3fd9c8559e4cc95f896
 - name: github.com/jinzhu/gorm
   version: 041cd3dd31a68a3e9ad20fcddb46085df5aebc76
+  subpackages:
+  - dialects/mysql
 - name: github.com/jinzhu/inflection
   version: 74387dc39a75e970e7a3ae6a3386b5bd2e5c5cff
-- name: github.com/lib/pq
-  version: 50761b0867bd1d9d069276790bcd4a3bccf2324a
-  subpackages:
-  - oid
+- name: github.com/kelseyhightower/envconfig
+  version: 13674b2d056fb658a00ba3f36e78043ced07c924
 - name: github.com/manucorporat/sse
   version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - name: github.com/satori/go.uuid

@@ -74,3 +74,4 @@ INSERT INTO permissions (user_id, role) VALUES (1, 0);
 * Use a websocket or push-based data to provide instant updates to clients
 * Hash passwords
 * Improve process for db migrations and seeding
+    

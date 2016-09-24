@@ -3,26 +3,53 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
-	"os"
+	"runtime"
 
-	"github.com/doubledutch/dd-vote/api/auth"
 	"github.com/doubledutch/dd-vote/api/handlers"
+	"github.com/doubledutch/dd-vote/api/models/table"
 	"github.com/doubledutch/dd-vote/controllers"
+	"github.com/doubledutch/dd-vote/middleware"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-
-	"github.com/doubledutch/dd-vote/api/models/resp"
-	"github.com/doubledutch/dd-vote/api/models/table"
-
-	_ "github.com/lib/pq"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/kelseyhightower/envconfig"
 )
 
-func main() {
+// Specification contains the configuration we pull from the Environment with envconfig
+type Specification struct {
+	SessionCookieAuthSecret string `envconfig:"session_cookie_auth_secret" default:"insecuresecret"`
+	CloudSQLUsername        string `envconfig:"cloud_sql_username" default:"ddvote"`
+	CloudSQLPassword        string `envconfig:"cloud_sql_password" required:"true"`
+	CloudSQLDatabase        string `envconfig:"cloud_sql_database" default:"ddvote"`
+	CloudSQLHost            string `envconfig:"cloud_sql_host" default:"127.0.0.1"`
+	CloudSQLPort            string `envconfig:"cloud_sql_port" default:"3306"`
+}
 
-	// connect to db
-	db, err := gorm.Open("postgres", getPostgresConn())
+func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+
+	var s Specification
+	err := envconfig.Process("ddvote", &s)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	log.Println("attempting to connect to mysql with connection spec", s)
+
+	db, err := gorm.Open("mysql", fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		s.CloudSQLUsername, s.CloudSQLPassword, s.CloudSQLHost, s.CloudSQLPort, s.CloudSQLDatabase,
+	))
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			// XXX(fujin): gracefully degrade/restart when no db connection is available.
+			panic(err)
+		}
+	}()
+
 	if err != nil {
 		log.Fatal("Unable to open database:", err.Error())
 	}
@@ -33,7 +60,14 @@ func main() {
 	db.DB().SetMaxOpenConns(100)
 
 	// run migrations
-	db.AutoMigrate(&table.Post{}, &table.Group{}, &table.User{}, &table.Vote{}, &table.Comment{}, &table.Permission{})
+	db.AutoMigrate(
+		&table.Post{},
+		&table.Group{},
+		&table.User{},
+		&table.Vote{},
+		&table.Comment{},
+		&table.Permission{},
+	)
 
 	// get api handler instances
 	ph := handlers.NewPostHandler(db)
@@ -57,7 +91,7 @@ func main() {
 	router.Static("/img", "./static/img")
 
 	// session management
-	store := sessions.NewCookieStore([]byte(getAuthSecret()))
+	store := sessions.NewCookieStore([]byte(s.SessionCookieAuthSecret))
 	router.Use(sessions.Sessions("ddvote_session", store))
 
 	// view routes
@@ -78,7 +112,7 @@ func main() {
 		// api v1 calls WITH auth
 		v1auth := v1.Group("")
 		{
-			v1auth.Use(UseAuth)
+			v1auth.Use(middleware.UseAuth)
 			v1auth.POST("/logout", uh.Logout)
 			v1auth.POST("/groups/:gname/posts", ph.CreatePost)
 			v1auth.DELETE("/posts/:puuid", ph.DeletePost)
@@ -91,51 +125,5 @@ func main() {
 		}
 	}
 
-	router.Run(":8081")
-}
-
-func getAuthSecret() string {
-	secret := os.Getenv("AUTH_SECRET")
-	if secret != "" {
-		return secret
-	}
-	return "insecuresecret"
-}
-
-func getPostgresConn() string {
-	conn := os.Getenv("DB_CONN")
-	if conn != "" {
-		return conn
-	}
-
-	host := os.Getenv("POSTGRES_ADDR")
-	if host == "" {
-		host = os.Getenv("DDVOTE_DB_PORT_5432_TCP_ADDR")
-	}
-	port := os.Getenv("POSTGRES_PORT")
-	if port == "" {
-		port = os.Getenv("DDVOTE_DB_PORT_5432_TCP_PORT")
-	}
-	username := os.Getenv("POSTGRES_USERNAME")
-	database := os.Getenv("POSTGRES_DATABASE")
-
-	conn = fmt.Sprintf("host=%s port=%s user=%s dbname=%s ",
-		host, port, username, database)
-
-	password := os.Getenv("POSTGRES_PASSWORD")
-	if password != "" {
-		conn += fmt.Sprintf(" password=%s", password)
-	}
-
-	// Assume ssl is disabled for now
-	conn += " sslmode=disable"
-	return conn
-}
-
-// UseAuth rejects unauthorized api requests
-func UseAuth(c *gin.Context) {
-	if !auth.IsLoggedIn(c) {
-		c.JSON(http.StatusUnauthorized, resp.APIResponse{IsError: false, Message: "User is not logged in"})
-		c.Abort()
-	}
+	router.Run(":80")
 }
